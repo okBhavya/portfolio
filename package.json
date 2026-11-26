@@ -1,0 +1,36 @@
+{
+  "name": "bhavya-gupta-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interactive personal portfolio and engineering laboratory for Bhavya Gupta",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint src tests",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --pool=threads"
+  },
+  "dependencies": {
+    "lucide-react": "^1.80.0",
+    "motion": "^14.14.0",
+    "next": "^16.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.5",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.3",
+    "@types/node": "^26.6.10",
+    "@types/react": "^19.3.3",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^4.5.2",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.4.6",
+    "jsdom": "^31.0.1",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.2"
+  }
+}
