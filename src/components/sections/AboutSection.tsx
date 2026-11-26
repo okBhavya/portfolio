@@ -67,6 +67,22 @@ export function AboutSection() {
 
                 <div className="mt-6">
                   <p className="font-mono-tech text-[11px] font-semibold tracking-wider text-[var(--ink-muted)] uppercase">
+                    Courses I&apos;ve Learnt
+                  </p>
+                  <div className="mt-2.5 flex flex-wrap gap-2">
+                    {profileConfig.courses.map((course) => (
+                      <span
+                        key={course}
+                        className="rounded-lg border border-[var(--border-ink)]/35 bg-[var(--bg-beige)]/75 px-2.5 py-1 text-xs font-semibold text-[var(--ink-primary)]"
+                      >
+                        {course}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-5">
+                  <p className="font-mono-tech text-[11px] font-semibold tracking-wider text-[var(--ink-muted)] uppercase">
                     Areas I gravitate toward
                   </p>
                   <div className="mt-2.5 flex flex-wrap gap-2">

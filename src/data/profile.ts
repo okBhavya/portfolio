@@ -34,6 +34,7 @@ export interface ProfileConfig {
   availability: AvailabilityConfig;
   socials: SocialLink[];
   interests: string[];
+  courses: string[];
   aboutNotes: {
     id: string;
     title: string;
@@ -56,8 +57,7 @@ export const profileConfig: ProfileConfig = {
   heroGreeting: "Hey, I'm Bhavya.",
   heroHeadline:
     "I build things at the intersection of AI, engineering, and product.",
-  heroSupporting:
-    "Computer Science student at BITS Pilani. Curious by default, builder by habit.",
+  heroSupporting: "Computer Science student at BITS Pilani.",
   positioningStatement:
     "I build intelligent systems, explore ideas, and turn complex problems into products people can actually use.",
   email: "f20230494@pilani.bits-pilani.ac.in",
@@ -117,6 +117,16 @@ export const profileConfig: ProfileConfig = {
     "Human-Computer Interaction & Trust UX",
     "Startups, Entrepreneurship & Climate Tech",
     "Badminton, Campus Fests & Teaching Math",
+  ],
+  courses: [
+    "Data Structures & Algorithms",
+    "Algorithms",
+    "Object-Oriented Programming",
+    "Database Management",
+    "Computer Networks",
+    "Deep Learning",
+    "Reinforcement Learning",
+    "Human-Computer Interaction",
   ],
   aboutNotes: [
     {

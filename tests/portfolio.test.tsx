@@ -36,6 +36,8 @@ describe("Bhavya Gupta Portfolio", () => {
     expect(experiences).toHaveLength(5);
     expect(screen.queryByText("Behavioural cohorts")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Back to top" })).toBeInTheDocument();
+    expect(screen.getByText(/Courses I've Learnt/i)).toBeInTheDocument();
+    expect(screen.getByText("Human-Computer Interaction")).toBeInTheDocument();
   });
 
   it("toggles Day and Night desk lamp theme", () => {
