@@ -278,7 +278,7 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
         }}
       >
         <Image
-          src="/hero/desk-day.png"
+          src="/hero/desk-day-v4.png"
           width={DAY_DIMENSIONS.width}
           height={DAY_DIMENSIONS.height}
           priority
@@ -287,10 +287,10 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
           sizes="(max-width: 820px) 96vw, 780px"
           draggable={false}
           alt="Hand-drawn illustration of Bhavya Gupta wearing a black t-shirt with textured messy hair and no glasses behind his silver Lenovo laptop with a GNU sticker, alongside a mini Nintendo Tetris console, My Projects corkboard, BITS Pilani Clock Tower window, owl, books, headphones, globe, and badminton racket"
-          className="hero-img-day hero-blend block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
+          className="hero-img-day block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
         />
         <Image
-          src="/hero/desk-night.png"
+          src="/hero/desk-night-v4.png"
           width={NIGHT_DIMENSIONS.width}
           height={NIGHT_DIMENSIONS.height}
           loading={isNight || preloadOther ? "eager" : "lazy"}
@@ -298,7 +298,7 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
           sizes="(max-width: 820px) 96vw, 780px"
           draggable={false}
           alt="Hand-drawn night-mode illustration of Bhavya Gupta wearing a black t-shirt sleeping at his desk beside his closed silver Lenovo laptop with a GNU sticker, glowing mini Nintendo Tetris console, reading owl, starry BITS Pilani Clock Tower window, books, globe, and badminton racket"
-          className="hero-img-night hero-blend block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
+          className="hero-img-night block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
         />
 
         {/* Inline SVG hotspot map locked directly to natural pixel coordinates */}
