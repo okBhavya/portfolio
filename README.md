@@ -69,9 +69,12 @@ cp .env.example .env.local
 | `NEXT_PUBLIC_SITE_URL` | `https://bhavyagupta.dev` | Canonical URL for Open Graph, `sitemap.xml`, and `robots.txt` |
 | `NEXT_PUBLIC_AVAILABILITY_MODE` | `building` | Controls hero status badge (`building` \| `seeking` \| `custom`) |
 
-### 3. Run Development Server
+### 3. Run Development Server or Preview Static Build
 ```bash
 npm run dev
+# Or build the static production export (`out/`) and preview locally:
+npm run build
+npx serve out
 ```
 Visit `http://localhost:3000`.
 

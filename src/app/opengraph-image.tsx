@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 
+export const dynamic = "force-static";
 export const alt = "Bhavya Gupta — AI, Engineering & Product Portfolio";
 export const size = {
   width: 1200,
