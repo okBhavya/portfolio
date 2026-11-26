@@ -7,7 +7,7 @@ import {
   buildMailtoHref,
   sanitizeField,
 } from "@/components/sections/ContactSection";
-import { profileConfig } from "@/data/profile";
+import { profileConfig, SITE_URL } from "@/data/profile";
 import { projects } from "@/data/projects";
 import { experiences } from "@/data/experience";
 
@@ -253,5 +253,6 @@ describe("Bhavya Gupta Portfolio", () => {
     renderApp();
     fireEvent.click(screen.getByRole("button", { name: /compose email/i }));
     expect(screen.getByRole("alert")).toHaveTextContent(/at least 4 characters/i);
+    expect(SITE_URL).toBe("https://bhavya.me");
   });
 });

@@ -74,7 +74,7 @@ cp .env.example .env.local
 
 | Variable | Default | Purpose |
 | :--- | :--- | :--- |
-| `NEXT_PUBLIC_SITE_URL` | `https://bhavya-gupta-portfolio-eta.vercel.app` | Canonical URL for Open Graph, `sitemap.xml`, and `robots.txt` |
+| `NEXT_PUBLIC_SITE_URL` | `https://bhavya.me` | Canonical URL for Open Graph, `sitemap.xml`, and `robots.txt` |
 | `NEXT_PUBLIC_AVAILABILITY_MODE` | `building` | Controls hero status badge (`building` \| `seeking` \| `custom`) |
 
 ### 3. Run Development Server or Production Server
@@ -115,17 +115,15 @@ This Next.js App Router portfolio is configured with production image optimizati
 2. Go to [vercel.com/new](https://vercel.com/new), sign in with GitHub, and import the repository.
 3. Keep the default **Next.js** build settings (`npm run build`).
 4. Add environment variables in **Project Settings → Environment Variables**:
-   - `NEXT_PUBLIC_SITE_URL` = your Vercel URL (e.g. `https://bhavya-gupta-portfolio-eta.vercel.app`, or your own custom domain)
+   - `NEXT_PUBLIC_SITE_URL` = `https://bhavya.me`
    - `NEXT_PUBLIC_AVAILABILITY_MODE` = `building` (or `seeking` when actively interviewing)
 5. Click **Deploy**. Vercel automatically provisions HTTPS on `*.vercel.app`.
 
-### Option B: Connect a Custom Domain
-1. Open **Vercel Dashboard → Project → Settings → Domains** and add your custom domain (plus `www`).
-2. At your DNS registrar (Namecheap, Cloudflare, Porkbun, etc.), add the DNS records Vercel displays:
-   - Apex (`@`): `A` record pointing to `76.76.21.21` (or `ALIAS`/`ANAME` if supported)
-   - `www`: `CNAME` record pointing to `cname.vercel-dns.com`
-3. Wait for DNS propagation (usually 5–30 minutes); Vercel automatically issues and renews the TLS/HTTPS certificate.
-4. Update `NEXT_PUBLIC_SITE_URL` in Vercel to `https://your-custom-domain.com` and redeploy so `sitemap.xml`, `robots.txt`, canonical links, and Open Graph URLs match your live domain.
+### Option B: Connect Custom Domain (`bhavya.me`)
+1. Open **Vercel Dashboard → Project → Settings → Domains** and add `bhavya.me` (plus `www.bhavya.me` redirecting to `bhavya.me`).
+2. When using external DNS instead of Vercel DNS (`ns1.vercel-dns.com` / `ns2.vercel-dns.com`), configure the exact DNS records Vercel displays for your project.
+3. Wait for DNS propagation and automatic TLS/HTTPS certificate issuance.
+4. Set `NEXT_PUBLIC_SITE_URL` in Vercel (if overridden) to `https://bhavya.me` and redeploy so `sitemap.xml`, `robots.txt`, canonical links, and Open Graph URLs match your live domain.
 
 ---
 
