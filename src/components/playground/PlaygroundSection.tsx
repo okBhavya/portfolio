@@ -12,14 +12,14 @@ function TetrisLoadingShell() {
         Interactive Playground
       </p>
       <p className="mt-2 font-serif-display text-2xl font-bold text-[var(--ink-primary)]">
-        Loading Hard Tetris Engine…
+        Loading Tetris…
       </p>
     </div>
   );
 }
 
-const LazyHardTetrisGame = dynamic(
-  () => import("./HardTetrisGame").then((mod) => mod.HardTetrisGame),
+const LazyTetrisGame = dynamic(
+  () => import("./TetrisGame").then((mod) => mod.TetrisGame),
   {
     ssr: false,
     loading: () => <TetrisLoadingShell />,
@@ -90,17 +90,17 @@ export function PlaygroundSection() {
                 id="playground-heading"
                 className="text-balance mt-1 font-serif-display text-3xl font-bold tracking-tight text-[var(--ink-primary)] sm:text-4xl"
               >
-                Hard-mode Tetris, customized
+                Play fun game Tetris
               </h2>
             </div>
             <p className="font-hand text-xl text-[var(--accent-blue)]">
-              Tune speed, blind ghost, rising garbage &amp; pentominoes!
+              Tune speed, shadow guide, rising rows &amp; pentominoes!
             </p>
           </div>
         </SectionReveal>
 
         <SectionReveal delay={0.08} className="mt-8">
-          {shouldLoadGame ? <LazyHardTetrisGame /> : <TetrisLoadingShell />}
+          {shouldLoadGame ? <LazyTetrisGame /> : <TetrisLoadingShell />}
         </SectionReveal>
       </div>
     </section>

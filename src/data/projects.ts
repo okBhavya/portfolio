@@ -153,7 +153,7 @@ export const projects: ProjectItem[] = [
       {
         src: "/projects/world-models/prediction_error_growth.png",
         alt: "Autoregressive prediction error growth from 1 to 20 steps",
-        caption: "Open-loop error growth (0.022 m at 1 step -> 0.635 m at 10 steps), mitigated by 10 Hz replanning.",
+        caption: "Open-loop error growth (0.022 m at 1 step → 0.635 m at 10 steps), mitigated by 10 Hz replanning.",
         mediaKind: "chart",
         width: 1650,
         height: 675,
@@ -169,7 +169,7 @@ export const projects: ProjectItem[] = [
     ],
     highlights: [
       "1-step position error of 0.022 m (2.2 cm) and 0.12° heading error across 686 held-out transitions.",
-      "Explicit safety constraints halved out-of-road incidents in traffic (40.0% -> 20.0%).",
+      "Explicit safety constraints halved out-of-road incidents in traffic (40.0% → 20.0%).",
       "Includes failure-case diagnostics across unseen roundabouts, T-junctions, and dense traffic.",
     ],
     sketchType: "mpc",
@@ -185,7 +185,7 @@ export const projects: ProjectItem[] = [
     featured: true,
     repoUrl: "https://github.com/okBhavya/Planet-Sentinal",
     statusNote:
-      "Metrics verified from resume; the GitHub repository currently contains an initial readme stub while code packaging is pending.",
+      "Verified project benchmarks and outcomes; repository code packaging is currently in progress.",
     problem:
       "Optical satellite imagery is blinded by thick cloud cover precisely when monsoon floods peak, delaying rapid situational mapping for district disaster response.",
     whatIBuilt:
@@ -500,12 +500,12 @@ export const projects: ProjectItem[] = [
         videoMp4: "/projects/continual-rl/agent_demo.mp4",
         videoWebm: "/projects/continual-rl/agent_demo.webm",
         posterSrc: "/projects/continual-rl/agent_demo-poster.png",
-        alt: "Trained CAR-SR continual RL agent balancing across task shifts",
-        caption: "Live checkpoint rollout demonstrating retained policy control across shifted physics.",
+        alt: "Trained CAR-SR continual RL inverted pendulum agent balancing across task shifts",
+        caption: "Live inverted pendulum (CartPole-v1) checkpoint balancing across shifted task dynamics.",
         isAnimated: true,
         mediaKind: "video",
-        width: 588,
-        height: 340,
+        width: 640,
+        height: 360,
       },
       {
         src: "/projects/continual-rl/forgetting_vs_conflict.png",
@@ -626,7 +626,7 @@ export const projects: ProjectItem[] = [
     architecturePipeline: [
       {
         step: "01",
-        title: "NL Rule -> 5-Stage Gate",
+        title: "NL Rule → 5-Stage Gate",
         detail: "Pydantic schema, fuzzy entity linking, semantic bounds, DFS cycle check, CP-SAT trial solve.",
       },
       {

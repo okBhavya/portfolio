@@ -2,7 +2,7 @@
 
 An illustrated personal workspace, engineering laboratory, and interactive portfolio built for **Bhavya Gupta** (B.E. Computer Science Engineering, BITS Pilani '27).
 
-Designed around a warm sketchbook-desk visual language—featuring a hand-drawn interactive SVG workspace with Day / Study-Lamp Night modes, verified case studies pulled from public GitHub repositories (`github.com/okBhavya`) with dedicated shareable routes (`/projects/[slug]`), animated experience counters, an interactive SU App product cohort explorer, a skill-to-proof workbench, and **Hard Tetris**, an isolated Canvas puzzle mini-game.
+Designed around a warm sketchbook-desk visual language—featuring a hand-drawn interactive SVG workspace with Day / Study-Lamp Night modes, verified case studies pulled from public GitHub repositories (`github.com/okBhavya`) with dedicated shareable routes (`/projects/[slug]`), animated experience counters, an interactive SU App product cohort explorer, a skill-to-proof workbench, and **Tetris**, an isolated customizable Canvas puzzle mini-game.
 
 ---
 
@@ -38,7 +38,7 @@ src/
 ├── components/
 │   ├── hero/                  # Interactive SVG polygon desk illustration (Day & Night maps)
 │   ├── projects/              # Lab gallery, filter tabs, lazy videos, SVG sketches, accessible modal
-│   ├── playground/            # Lazy-loaded Hard Tetris Canvas mini-game (keyboard + touch + SFX)
+│   ├── playground/            # Lazy-loaded Tetris Canvas mini-game (keyboard + touch + SFX)
 │   ├── sections/              # About, Experience (+ SUTT cohort explorer), Skills, Contact
 │   ├── AnimatedCounter.tsx    # Viewport-triggered counters respecting reduced-motion
 │   ├── Footer.tsx             # Illustrated signature, social links, dynamic year

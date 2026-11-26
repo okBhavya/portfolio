@@ -12,9 +12,9 @@
   --border-ink: #272c28;
   --border-soft: #d7cebe;
 
-  --accent-orange: #b54b0d;
+  --accent-orange: #a3420a;
   --accent-orange-fill: #b54b0d;
-  --accent-orange-soft: #f7e1d1;
+  --accent-orange-soft: #fcefe6;
   --accent-green: #1b5745;
   --accent-green-soft: #d8ece4;
   --accent-mustard: #8c6209;
@@ -189,11 +189,40 @@ html:not([data-theme="night"]) .hero-img-night {
 }
 
 .hero-stage {
-  aspect-ratio: 1256 / 548;
+  aspect-ratio: 1376 / 768;
 }
 
-html[data-theme="night"] .hero-stage {
-  aspect-ratio: 1179 / 574;
+.hero-blend {
+  -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 2.5%,
+      black 97.5%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 5%,
+      black 98%,
+      transparent 100%
+    );
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 2.5%,
+      black 97.5%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 5%,
+      black 98%,
+      transparent 100%
+    );
+  mask-composite: intersect;
 }
 
 @keyframes surfaceEnter {

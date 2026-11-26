@@ -14,7 +14,7 @@ export type DeskObjectId =
   | "owlbot"
   | "books"
   | "window"
-  | "mug"
+  | "console"
   | "interests";
 
 interface SvgHotspotSpec {
@@ -36,8 +36,8 @@ interface DeskPropMeta {
   night: SvgHotspotSpec;
 }
 
-const DAY_DIMENSIONS = { width: 1256, height: 548 } as const;
-const NIGHT_DIMENSIONS = { width: 1179, height: 574 } as const;
+const DAY_DIMENSIONS = { width: 1376, height: 768 } as const;
+const NIGHT_DIMENSIONS = { width: 1376, height: 768 } as const;
 
 const DESK_PROPS: DeskPropMeta[] = [
   {
@@ -50,19 +50,19 @@ const DESK_PROPS: DeskPropMeta[] = [
     actionLabel: "Open Projects Lab",
     targetSection: "projects",
     day: {
-      points: "82,24 446,24 446,294 82,294",
-      labelX: 264,
-      labelY: 18,
+      points: "36,34 516,34 516,386 36,386",
+      labelX: 276,
+      labelY: 32,
     },
     night: {
-      points: "124,26 422,26 422,248 124,248",
-      labelX: 273,
-      labelY: 18,
+      points: "36,34 516,34 516,386 36,386",
+      labelX: 276,
+      labelY: 32,
     },
   },
   {
     id: "window",
-    label: "Pilani Campus Window — View Journey and Experience",
+    label: "BITS Pilani Clock Tower Window — View Journey and Experience",
     handNote: "Pilani ↔ Kerala",
     title: "Where I Study & Build",
     description:
@@ -70,14 +70,14 @@ const DESK_PROPS: DeskPropMeta[] = [
     actionLabel: "View Experience Timeline",
     targetSection: "experience",
     day: {
-      points: "866,11 1195,11 1195,326 1018,326 985,270 898,266 866,306",
-      labelX: 1030,
-      labelY: 16,
+      points: "896,24 1338,24 1338,474 1140,474 1126,386 968,386 896,436",
+      labelX: 1117,
+      labelY: 26,
     },
     night: {
-      points: "776,15 1076,15 1076,288 1044,288 994,238 926,238 890,288 776,288",
-      labelX: 926,
-      labelY: 14,
+      points: "896,24 1338,24 1338,474 1140,474 1126,386 968,386 896,436",
+      labelX: 1117,
+      labelY: 26,
     },
   },
   {
@@ -89,14 +89,14 @@ const DESK_PROPS: DeskPropMeta[] = [
     actionLabel: "See Courses & About",
     targetSection: "about",
     day: {
-      points: "96,332 312,332 312,448 370,448 370,524 96,524",
-      labelX: 215,
-      labelY: 328,
+      points: "64,540 296,540 296,620 390,620 390,726 64,726",
+      labelX: 210,
+      labelY: 534,
     },
     night: {
-      points: "94,358 206,358 206,410 320,410 320,520 94,520",
-      labelX: 164,
-      labelY: 346,
+      points: "64,540 296,540 296,620 390,620 390,726 64,726",
+      labelX: 210,
+      labelY: 534,
     },
   },
   {
@@ -110,39 +110,39 @@ const DESK_PROPS: DeskPropMeta[] = [
     targetSection: "projects",
     filterCategory: "AI / ML",
     day: {
-      points: "314,260 442,260 442,452 314,452",
-      labelX: 380,
-      labelY: 254,
+      points: "316,458 450,458 450,628 316,628",
+      labelX: 384,
+      labelY: 452,
     },
     night: {
-      points: "208,244 324,244 324,424 208,424",
-      labelX: 266,
-      labelY: 238,
+      points: "316,462 458,462 458,644 316,644",
+      labelX: 388,
+      labelY: 456,
     },
   },
   {
-    id: "mug",
-    label: "Chai Mug & Sketchpad — Play Hard Tetris",
-    handNote: "Play Hard Tetris!",
-    title: "Chai Break · Hard Tetris",
+    id: "console",
+    label: "Mini Nintendo Console — Play Tetris",
+    handNote: "Play Tetris!",
+    title: "Mini Nintendo Console · Tetris",
     description:
-      "Need a breather from reading case studies? Custom-configure gravity, blind ghost, rising garbage, or pentomino chaos in Hard Tetris.",
-    actionLabel: "Play Hard Tetris",
+      "Take a breather from case studies and play Tetris — customize drop speed, toggle shadow guide, add rising rows, or unlock 5-cell pentominoes.",
+    actionLabel: "Play Tetris",
     targetSection: "playground",
     day: {
-      points: "444,310 522,310 522,506 404,506 404,454 444,454",
-      labelX: 466,
-      labelY: 304,
+      points: "452,554 550,554 550,708 410,708 410,630 452,630",
+      labelX: 494,
+      labelY: 548,
     },
     night: {
-      points: "326,296 512,296 512,516 326,516",
-      labelX: 400,
-      labelY: 288,
+      points: "452,544 540,544 540,710 410,710 410,636 452,636",
+      labelX: 494,
+      labelY: 538,
     },
   },
   {
     id: "laptop",
-    label: "Drafting Laptop — Inspect Engineering Stack",
+    label: "Lenovo Laptop — Inspect Engineering Stack",
     handNote: "Tech stack ↙",
     title: "Engineering Stack & Systems",
     description:
@@ -150,14 +150,14 @@ const DESK_PROPS: DeskPropMeta[] = [
     actionLabel: "Inspect Tech Workbench",
     targetSection: "skills",
     day: {
-      points: "524,290 756,290 756,484 524,484",
-      labelX: 640,
-      labelY: 286,
+      points: "554,486 852,486 852,690 554,690",
+      labelX: 703,
+      labelY: 480,
     },
     night: {
-      points: "574,398 882,398 882,504 574,504",
-      labelX: 728,
-      labelY: 390,
+      points: "566,576 854,576 854,704 566,704",
+      labelX: 710,
+      labelY: 572,
     },
   },
   {
@@ -171,16 +171,14 @@ const DESK_PROPS: DeskPropMeta[] = [
     actionLabel: "Explore Experience & About",
     targetSection: "experience",
     day: {
-      points:
-        "824,290 912,268 986,278 1018,356 1018,402 1176,402 1176,508 946,508 824,492",
-      labelX: 938,
-      labelY: 256,
+      points: "912,392 1136,392 1146,596 1336,612 1336,722 912,722",
+      labelX: 1030,
+      labelY: 386,
     },
     night: {
-      points:
-        "898,240 1004,240 1058,296 1080,450 1080,534 868,534 814,442 814,378 898,378",
-      labelX: 968,
-      labelY: 228,
+      points: "912,392 1136,392 1146,596 1336,612 1336,722 912,722",
+      labelX: 1030,
+      labelY: 386,
     },
   },
 ];
@@ -220,6 +218,10 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
     if (prop.id === "pinboard") {
       onSelectProjectFilter?.("All");
       navigateToSection("projects");
+      return;
+    }
+    if (prop.id === "console") {
+      navigateToSection("playground");
       return;
     }
     if (prop.id === "owlbot") {
@@ -263,7 +265,7 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
 
   return (
     <div
-      className="relative mx-auto w-full max-w-[920px] select-none [-webkit-tap-highlight-color:transparent]"
+      className="relative mx-auto w-full max-w-[780px] select-none [-webkit-tap-highlight-color:transparent]"
       onPointerMove={handlePointerMove}
       onPointerLeave={resetPointer}
     >
@@ -282,10 +284,10 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
           priority
           fetchPriority="high"
           decoding="sync"
-          sizes="(max-width: 960px) 96vw, 920px"
+          sizes="(max-width: 820px) 96vw, 780px"
           draggable={false}
-          alt="Hand-drawn illustration of Bhavya Gupta smiling behind his sticker-covered laptop at a desk with a My Projects corkboard, BITS Pilani clock tower window, owl, books, headphones, chai mug, globe, and badminton racket"
-          className="hero-img-day block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
+          alt="Hand-drawn illustration of Bhavya Gupta wearing a black t-shirt with textured messy hair and no glasses behind his silver Lenovo laptop with a GNU sticker, alongside a mini Nintendo Tetris console, My Projects corkboard, BITS Pilani Clock Tower window, owl, books, headphones, globe, and badminton racket"
+          className="hero-img-day hero-blend block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
         />
         <Image
           src="/hero/desk-night.png"
@@ -293,10 +295,10 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
           height={NIGHT_DIMENSIONS.height}
           loading={isNight || preloadOther ? "eager" : "lazy"}
           decoding="sync"
-          sizes="(max-width: 960px) 96vw, 920px"
+          sizes="(max-width: 820px) 96vw, 780px"
           draggable={false}
-          alt="Hand-drawn night-mode illustration of Bhavya Gupta sleeping at his desk beside his closed laptop, reading owl, starry BITS Pilani clock tower window, books, mug, globe, and badminton racket"
-          className="hero-img-night block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
+          alt="Hand-drawn night-mode illustration of Bhavya Gupta wearing a black t-shirt sleeping at his desk beside his closed silver Lenovo laptop with a GNU sticker, glowing mini Nintendo Tetris console, reading owl, starry BITS Pilani Clock Tower window, books, globe, and badminton racket"
+          className="hero-img-night hero-blend block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
         />
 
         {/* Inline SVG hotspot map locked directly to natural pixel coordinates */}

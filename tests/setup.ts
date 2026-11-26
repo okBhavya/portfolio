@@ -69,7 +69,7 @@ Object.defineProperty(window, "matchMedia", {
   }),
 });
 
-// Lightweight Canvas 2D context mock for HardTetrisGame tests in jsdom
+// Lightweight Canvas 2D context mock for TetrisGame tests in jsdom
 HTMLCanvasElement.prototype.getContext = (() => {
   return {
     setTransform: () => {},

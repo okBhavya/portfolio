@@ -12,7 +12,7 @@ import {
   ArrowDown,
   ArrowLeft,
   ArrowRight,
-  Flame,
+  Gamepad2,
   Layers,
   Pause,
   Play,
@@ -41,11 +41,11 @@ type PieceKind =
 
 type CellValue = PieceKind | "GARBAGE" | null;
 
-type PresetId = "classic-hard" | "blind" | "garbage" | "overclock";
+type PresetId = "classic" | "blind" | "rising" | "pentomino";
 
 interface GameRules {
   presetId: PresetId | "custom";
-  startLevel: 3 | 5 | 8 | 10;
+  startLevel: 1 | 3 | 5 | 8;
   ghostEnabled: boolean;
   holdEnabled: boolean;
   garbageIntervalSec: 0 | 16 | 10;
@@ -82,9 +82,12 @@ const CELL = 26;
 const BOARD_W = COLS * CELL;
 const BOARD_H = ROWS * CELL;
 const MAX_LOCK_RESETS = 8;
-const LOCK_DELAY_MS = 420;
-const BEST_SCORE_KEY = "bhavya-hard-tetris-best-v1";
-const BEST_SCORE_EVENT = "bhavya-hard-tetris-best-change";
+const LOCK_DELAY_MS = 450;
+const DAS_DELAY_MS = 145;
+const ARR_INTERVAL_MS = 48;
+const BEST_SCORE_KEY = "bhavya-tetris-best-v1";
+const LEGACY_BEST_SCORE_KEY = "bhavya-hard-tetris-best-v1";
+const BEST_SCORE_EVENT = "bhavya-tetris-best-change";
 
 const STANDARD_KINDS: PieceKind[] = ["I", "O", "T", "S", "Z", "J", "L"];
 const PENTOMINO_KINDS: PieceKind[] = ["X5", "U5", "P5", "T5"];
@@ -169,12 +172,13 @@ const PRESETS: Record<
   PresetId,
   { label: string; description: string; rules: GameRules }
 > = {
-  "classic-hard": {
-    label: "Hard Classic",
-    description: "Starts Lv 5 with strict 420ms lock delay & fast speed ramp.",
+  classic: {
+    label: "Classic Arcade",
+    description:
+      "Balanced Level 3 pace with landing guide & hold slot.",
     rules: {
-      presetId: "classic-hard",
-      startLevel: 5,
+      presetId: "classic",
+      startLevel: 3,
       ghostEnabled: true,
       holdEnabled: true,
       garbageIntervalSec: 0,
@@ -184,10 +188,11 @@ const PRESETS: Record<
   },
   blind: {
     label: "Blind Drop",
-    description: "Zero landing shadow — pure column intuition at Lv 5 speed.",
+    description:
+      "Hides the landing guide — test pure column intuition.",
     rules: {
       presetId: "blind",
-      startLevel: 5,
+      startLevel: 3,
       ghostEnabled: false,
       holdEnabled: true,
       garbageIntervalSec: 0,
@@ -195,29 +200,31 @@ const PRESETS: Record<
       pentominoesEnabled: false,
     },
   },
-  garbage: {
-    label: "Garbage Surge",
-    description: "3 junk rows at spawn + rising floor attacks every 10s.",
+  rising: {
+    label: "Rising Stack",
+    description:
+      "2 starting floor rows + a new bottom row rises every 16s.",
     rules: {
-      presetId: "garbage",
+      presetId: "rising",
       startLevel: 5,
       ghostEnabled: true,
       holdEnabled: true,
-      garbageIntervalSec: 10,
-      initialGarbageRows: 3,
+      garbageIntervalSec: 16,
+      initialGarbageRows: 2,
       pentominoesEnabled: false,
     },
   },
-  overclock: {
-    label: "Chaos Pentomino",
-    description: "Lv 8 speed, No Ghost, Hold disabled & 5-cell pentominoes.",
+  pentomino: {
+    label: "Pentomino Mode",
+    description:
+      "Unlocks 5-cell pentomino shapes alongside classic 7-bag pieces.",
     rules: {
-      presetId: "overclock",
-      startLevel: 8,
-      ghostEnabled: false,
-      holdEnabled: false,
-      garbageIntervalSec: 10,
-      initialGarbageRows: 2,
+      presetId: "pentomino",
+      startLevel: 5,
+      ghostEnabled: true,
+      holdEnabled: true,
+      garbageIntervalSec: 0,
+      initialGarbageRows: 0,
       pentominoesEnabled: true,
     },
   },
@@ -225,7 +232,9 @@ const PRESETS: Record<
 
 function readBestScore(): number {
   try {
-    const saved = window.localStorage.getItem(BEST_SCORE_KEY);
+    const saved =
+      window.localStorage.getItem(BEST_SCORE_KEY) ??
+      window.localStorage.getItem(LEGACY_BEST_SCORE_KEY);
     const parsed = saved ? Number.parseInt(saved, 10) : 0;
     return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
   } catch {
@@ -276,8 +285,7 @@ function rotateMatrix(matrix: number[][], dir: 1 | -1): number[][] {
 function generateBag(pentominoesEnabled: boolean): PieceKind[] {
   const pool: PieceKind[] = [...STANDARD_KINDS];
   if (pentominoesEnabled) {
-    const extraCount = 2;
-    for (let i = 0; i < extraCount; i++) {
+    for (let i = 0; i < 2; i++) {
       pool.push(
         PENTOMINO_KINDS[Math.floor(Math.random() * PENTOMINO_KINDS.length)]
       );
@@ -291,20 +299,20 @@ function generateBag(pentominoesEnabled: boolean): PieceKind[] {
 }
 
 function getDropIntervalMs(level: number): number {
-  return Math.max(55, Math.round(620 * Math.pow(0.83, level - 1)));
+  return Math.max(60, Math.round(760 * Math.pow(0.84, level - 1)));
 }
 
 function computeRuleMultiplier(rules: GameRules): number {
   let mult = 1.0;
-  if (rules.startLevel >= 10) mult += 0.35;
-  else if (rules.startLevel >= 8) mult += 0.2;
-  else if (rules.startLevel <= 3) mult -= 0.1;
+  if (rules.startLevel >= 8) mult += 0.25;
+  else if (rules.startLevel >= 5) mult += 0.1;
+  else if (rules.startLevel <= 1) mult -= 0.1;
 
-  if (!rules.ghostEnabled) mult += 0.25;
+  if (!rules.ghostEnabled) mult += 0.2;
   if (!rules.holdEnabled) mult += 0.2;
-  if (rules.garbageIntervalSec === 10) mult += 0.45;
+  if (rules.garbageIntervalSec === 10) mult += 0.4;
   else if (rules.garbageIntervalSec === 16) mult += 0.2;
-  if (rules.pentominoesEnabled) mult += 0.4;
+  if (rules.pentominoesEnabled) mult += 0.45;
 
   return Math.max(0.9, Math.round(mult * 100) / 100);
 }
@@ -353,15 +361,15 @@ function MiniPiecePreview({ kind }: { kind: PieceKind | null }) {
   );
 }
 
-export function HardTetrisGame() {
+export function TetrisGame() {
   const cabinetRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const rafRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number>(0);
 
-  const [rules, setRules] = useState<GameRules>(PRESETS["classic-hard"].rules);
-  const rulesRef = useRef<GameRules>(PRESETS["classic-hard"].rules);
+  const [rules, setRules] = useState<GameRules>(PRESETS.classic.rules);
+  const rulesRef = useRef<GameRules>(PRESETS.classic.rules);
 
   const [status, setStatus] = useState<GameStatus>("start");
   const statusRef = useRef<GameStatus>("start");
@@ -383,7 +391,7 @@ export function HardTetrisGame() {
   const canHoldRef = useRef<boolean>(true);
 
   const scoreRef = useRef<number>(0);
-  const levelRef = useRef<number>(5);
+  const levelRef = useRef<number>(PRESETS.classic.rules.startLevel);
   const linesRef = useRef<number>(0);
   const comboRef = useRef<number>(-1);
   const maxComboRef = useRef<number>(0);
@@ -393,8 +401,14 @@ export function HardTetrisGame() {
   const garbageAccRef = useRef<number>(0);
   const flashRowsRef = useRef<{ rows: number[]; ttlMs: number } | null>(null);
   const shakeMsRef = useRef<number>(0);
-  const calloutRef = useRef<string>("Ready");
+  const calloutRef = useRef<string>("Pick a preset & press Start");
   const gameOverReasonRef = useRef<string>("");
+
+  // Continuous hold tracking for responsive DAS/ARR movement (desktop keyboard & touch buttons)
+  const heldDirectionRef = useRef<"left" | "right" | "down" | null>(null);
+  const dasElapsedRef = useRef<number>(0);
+  const arrElapsedRef = useRef<number>(0);
+  const touchRepeatTimerRef = useRef<number | null>(null);
 
   const [hud, setHud] = useState<HudSnapshot>({
     score: 0,
@@ -407,7 +421,7 @@ export function HardTetrisGame() {
     canHold: true,
     nextQueue: ["T", "I", "L"],
     garbageProgress: 0,
-    lastCallout: "Configure rules & press Start",
+    lastCallout: "Pick a preset & press Start",
     gameOverReason: "",
   });
 
@@ -424,6 +438,16 @@ export function HardTetrisGame() {
   useEffect(() => {
     rulesRef.current = rules;
   }, [rules]);
+
+  const stopTouchRepeat = useCallback(() => {
+    if (touchRepeatTimerRef.current !== null) {
+      window.clearTimeout(touchRepeatTimerRef.current);
+      window.clearInterval(touchRepeatTimerRef.current);
+      touchRepeatTimerRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => stopTouchRepeat, [stopTouchRepeat]);
 
   const playSfx = useCallback(
     (
@@ -580,6 +604,8 @@ export function HardTetrisGame() {
       gameOverReasonRef.current = reason;
       calloutRef.current = "Topped Out";
       statusRef.current = "gameover";
+      heldDirectionRef.current = null;
+      stopTouchRepeat();
       setStatus("gameover");
       playSfx("gameover");
 
@@ -594,7 +620,7 @@ export function HardTetrisGame() {
       }
       syncHud();
     },
-    [playSfx, syncHud]
+    [playSfx, stopTouchRepeat, syncHud]
   );
 
   const spawnPiece = useCallback(
@@ -618,7 +644,7 @@ export function HardTetrisGame() {
           activeRef.current = { kind, matrix, row: row - 1, col, rotState: 0 };
         } else {
           activeRef.current = null;
-          triggerGameOver("Stack breached the spawn ceiling");
+          triggerGameOver("Stack reached the top edge");
           return false;
         }
       } else {
@@ -652,7 +678,7 @@ export function HardTetrisGame() {
     }
 
     if (toppedOut) {
-      triggerGameOver("Piece locked above the top boundary");
+      triggerGameOver("Piece locked above the ceiling");
       return;
     }
 
@@ -666,7 +692,7 @@ export function HardTetrisGame() {
     const mult = computeRuleMultiplier(rulesRef.current);
 
     if (fullRows.length > 0) {
-      flashRowsRef.current = { rows: fullRows, ttlMs: 110 };
+      flashRowsRef.current = { rows: fullRows, ttlMs: 120 };
       const cleared = fullRows.length;
       const basePoints = [0, 100, 300, 500, 800, 1200][Math.min(5, cleared)];
       comboRef.current += 1;
@@ -678,15 +704,19 @@ export function HardTetrisGame() {
       );
       scoreRef.current += gained;
       linesRef.current += cleared;
+      const prevLevel = levelRef.current;
       levelRef.current = Math.min(
         18,
-        rulesRef.current.startLevel + Math.floor(linesRef.current / 8)
+        rulesRef.current.startLevel + Math.floor(linesRef.current / 10)
       );
 
       if (cleared >= 4) {
         calloutRef.current = `TETRIS x${mult} (+${gained})`;
         shakeMsRef.current = 160;
         playSfx("tetris");
+      } else if (levelRef.current > prevLevel) {
+        calloutRef.current = `LEVEL UP -> Lv ${levelRef.current}!`;
+        playSfx("clear");
       } else {
         calloutRef.current = `${
           cleared === 3 ? "TRIPLE" : cleared === 2 ? "DOUBLE" : "CLEAR"
@@ -724,16 +754,22 @@ export function HardTetrisGame() {
     boardRef.current.push(createGarbageRow());
     if (activeRef.current) {
       activeRef.current.row -= 1;
-      if (!canPlace(activeRef.current.matrix, activeRef.current.row, activeRef.current.col)) {
+      if (
+        !canPlace(
+          activeRef.current.matrix,
+          activeRef.current.row,
+          activeRef.current.col
+        )
+      ) {
         activeRef.current.row -= 1;
       }
     }
     shakeMsRef.current = 130;
-    calloutRef.current = "Garbage Surge +1 Row!";
+    calloutRef.current = "Rising Stack +1 Row!";
     playSfx("garbage");
 
     if (topHasBlocks) {
-      triggerGameOver("Rising garbage pushed stack above ceiling");
+      triggerGameOver("Rising stack pushed blocks above ceiling");
       return;
     }
     syncHud();
@@ -772,7 +808,10 @@ export function HardTetrisGame() {
       garbageAccRef.current = 0;
       flashRowsRef.current = null;
       shakeMsRef.current = 0;
-      calloutRef.current = `${activeRules.pentominoesEnabled ? "Pentomino" : "Hard"} Run Started!`;
+      heldDirectionRef.current = null;
+      calloutRef.current = `${
+        activeRules.pentominoesEnabled ? "Pentomino" : "Tetris"
+      } Run Started!`;
       gameOverReasonRef.current = "";
 
       statusRef.current = "playing";
@@ -792,7 +831,7 @@ export function HardTetrisGame() {
       startGame(presetRules);
     } else {
       levelRef.current = presetRules.startLevel;
-      calloutRef.current = `${PRESETS[presetId].label} preset armed`;
+      calloutRef.current = `${PRESETS[presetId].label} selected`;
       syncHud();
     }
   };
@@ -812,13 +851,15 @@ export function HardTetrisGame() {
       startGame(updated);
     } else {
       levelRef.current = updated.startLevel;
-      calloutRef.current = "Custom rule armed";
+      calloutRef.current = "Custom rule ready";
       syncHud();
     }
   };
 
   const togglePause = useCallback(() => {
     if (statusRef.current === "playing") {
+      heldDirectionRef.current = null;
+      stopTouchRepeat();
       statusRef.current = "paused";
       setStatus("paused");
     } else if (statusRef.current === "paused") {
@@ -826,7 +867,7 @@ export function HardTetrisGame() {
       statusRef.current = "playing";
       setStatus("playing");
     }
-  }, []);
+  }, [stopTouchRepeat]);
 
   const moveHorizontal = useCallback(
     (dx: -1 | 1) => {
@@ -939,7 +980,15 @@ export function HardTetrisGame() {
     syncHud();
   }, [playSfx, spawnPiece, syncHud]);
 
-  // Keyboard bindings
+  const startTouchRepeat = (action: () => void) => {
+    stopTouchRepeat();
+    action();
+    touchRepeatTimerRef.current = window.setTimeout(() => {
+      touchRepeatTimerRef.current = window.setInterval(action, 58);
+    }, 165);
+  };
+
+  // Keyboard bindings with smooth DAS/ARR hold support
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
@@ -952,7 +1001,10 @@ export function HardTetrisGame() {
         return;
       }
 
-      if (e.code === "KeyP" && (statusRef.current === "playing" || statusRef.current === "paused")) {
+      if (
+        e.code === "KeyP" &&
+        (statusRef.current === "playing" || statusRef.current === "paused")
+      ) {
         e.preventDefault();
         togglePause();
         return;
@@ -976,17 +1028,28 @@ export function HardTetrisGame() {
         e.preventDefault();
       }
 
+      if (e.repeat) return;
+
       switch (e.code) {
         case "ArrowLeft":
         case "KeyA":
+          heldDirectionRef.current = "left";
+          dasElapsedRef.current = 0;
+          arrElapsedRef.current = 0;
           moveHorizontal(-1);
           break;
         case "ArrowRight":
         case "KeyD":
+          heldDirectionRef.current = "right";
+          dasElapsedRef.current = 0;
+          arrElapsedRef.current = 0;
           moveHorizontal(1);
           break;
         case "ArrowDown":
         case "KeyS":
+          heldDirectionRef.current = "down";
+          dasElapsedRef.current = 0;
+          arrElapsedRef.current = 0;
           softDrop();
           break;
         case "Space":
@@ -1007,8 +1070,31 @@ export function HardTetrisGame() {
       }
     };
 
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (
+        (e.code === "ArrowLeft" || e.code === "KeyA") &&
+        heldDirectionRef.current === "left"
+      ) {
+        heldDirectionRef.current = null;
+      } else if (
+        (e.code === "ArrowRight" || e.code === "KeyD") &&
+        heldDirectionRef.current === "right"
+      ) {
+        heldDirectionRef.current = null;
+      } else if (
+        (e.code === "ArrowDown" || e.code === "KeyS") &&
+        heldDirectionRef.current === "down"
+      ) {
+        heldDirectionRef.current = null;
+      }
+    };
+
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
+    };
   }, [
     hardDrop,
     holdCurrentPiece,
@@ -1023,6 +1109,8 @@ export function HardTetrisGame() {
   useEffect(() => {
     const pauseIfPlaying = (reason: string) => {
       if (statusRef.current !== "playing") return;
+      heldDirectionRef.current = null;
+      stopTouchRepeat();
       statusRef.current = "paused";
       setStatus("paused");
       calloutRef.current = reason;
@@ -1056,9 +1144,9 @@ export function HardTetrisGame() {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       observer?.disconnect();
     };
-  }, [syncHud]);
+  }, [stopTouchRepeat, syncHud]);
 
-  // Main animation & gravity loop
+  // Main animation, DAS/ARR input repeat, and gravity loop
   useEffect(() => {
     const drawBlock = (
       ctx: CanvasRenderingContext2D,
@@ -1111,19 +1199,33 @@ export function HardTetrisGame() {
       lastTimeRef.current = now;
 
       if (statusRef.current === "playing" && activeRef.current) {
+        // Handle smooth DAS / ARR horizontal or soft-drop hold
+        const held = heldDirectionRef.current;
+        if (held) {
+          dasElapsedRef.current += dt;
+          if (dasElapsedRef.current >= DAS_DELAY_MS) {
+            arrElapsedRef.current += dt;
+            while (arrElapsedRef.current >= ARR_INTERVAL_MS) {
+              arrElapsedRef.current -= ARR_INTERVAL_MS;
+              if (held === "left") moveHorizontal(-1);
+              else if (held === "right") moveHorizontal(1);
+              else if (held === "down") softDrop();
+            }
+          }
+        }
+
         dropAccRef.current += dt;
         const dropInterval = getDropIntervalMs(levelRef.current);
         if (dropAccRef.current >= dropInterval) {
           dropAccRef.current -= dropInterval;
           const p = activeRef.current;
-          if (canPlace(p.matrix, p.row + 1, p.col)) {
+          if (p && canPlace(p.matrix, p.row + 1, p.col)) {
             p.row += 1;
           }
         }
 
-        // Strict lock delay on floor contact
         const p = activeRef.current;
-        if (!canPlace(p.matrix, p.row + 1, p.col)) {
+        if (p && !canPlace(p.matrix, p.row + 1, p.col)) {
           lockTimerRef.current += dt;
           if (lockTimerRef.current >= LOCK_DELAY_MS) {
             lockActivePiece();
@@ -1132,14 +1234,19 @@ export function HardTetrisGame() {
           lockTimerRef.current = 0;
         }
 
-        // Rising garbage threat
+        // Rising stack row push timer
         const intervalSec = rulesRef.current.garbageIntervalSec;
         if (intervalSec > 0) {
           garbageAccRef.current += dt;
           if (garbageAccRef.current >= intervalSec * 1000) {
             garbageAccRef.current = 0;
             pushGarbageRow();
-          } else if (Math.floor((garbageAccRef.current / (intervalSec * 1000)) * 20) !== Math.floor(((garbageAccRef.current - dt) / (intervalSec * 1000)) * 20)) {
+          } else if (
+            Math.floor((garbageAccRef.current / (intervalSec * 1000)) * 20) !==
+            Math.floor(
+              ((garbageAccRef.current - dt) / (intervalSec * 1000)) * 20
+            )
+          ) {
             syncHud();
           }
         }
@@ -1159,17 +1266,17 @@ export function HardTetrisGame() {
       // Draw well
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       if (shakeMsRef.current > 0) {
-        const shakeX = (Math.random() - 0.5) * 3.5;
-        const shakeY = (Math.random() - 0.5) * 3.5;
+        const shakeX = (Math.random() - 0.5) * 3.2;
+        const shakeY = (Math.random() - 0.5) * 3.2;
         ctx.translate?.(shakeX, shakeY);
       }
 
       ctx.fillStyle = "#151A22";
       ctx.fillRect(0, 0, BOARD_W, BOARD_H);
 
-      // Danger top 4-row tint
+      // Danger top 3-row tint
       ctx.fillStyle = "rgba(217, 79, 79, 0.08)";
-      ctx.fillRect(0, 0, BOARD_W, CELL * 4);
+      ctx.fillRect(0, 0, BOARD_W, CELL * 3);
 
       // Subtle coordinate grid
       ctx.strokeStyle = "rgba(247, 243, 235, 0.06)";
@@ -1239,10 +1346,17 @@ export function HardTetrisGame() {
             }
           }
         }
+
+        // Subtle lock-delay indicator strip at top of well when grounded
+        if (lockTimerRef.current > 0) {
+          const lockRatio = Math.min(1, lockTimerRef.current / LOCK_DELAY_MS);
+          ctx.fillStyle = "rgba(217, 107, 39, 0.85)";
+          ctx.fillRect(0, 0, BOARD_W * (1 - lockRatio), 3);
+        }
       }
 
       if (flashRowsRef.current) {
-        ctx.fillStyle = "rgba(255, 253, 249, 0.35)";
+        ctx.fillStyle = "rgba(255, 253, 249, 0.38)";
         for (const r of flashRowsRef.current.rows) {
           ctx.fillRect(0, r * CELL, BOARD_W, CELL);
         }
@@ -1256,7 +1370,14 @@ export function HardTetrisGame() {
     return () => {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
-  }, [canPlace, lockActivePiece, pushGarbageRow, syncHud]);
+  }, [
+    canPlace,
+    lockActivePiece,
+    moveHorizontal,
+    pushGarbageRow,
+    softDrop,
+    syncHud,
+  ]);
 
   const effectiveBest = Math.max(storedBest, hud.bestScore);
 
@@ -1266,14 +1387,14 @@ export function HardTetrisGame() {
       <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-[var(--border-ink)] bg-[var(--bg-beige)] px-4 py-3 sm:px-6">
         <div className="flex flex-wrap items-center gap-2.5">
           <span className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border-ink)] bg-[var(--accent-orange-fill)] px-2.5 py-0.5 font-mono-tech text-[11px] font-bold text-[#FFFDF9]">
-            <Flame className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>HARD TETRIS</span>
+            <Gamepad2 className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>TETRIS</span>
           </span>
           <span className="rounded-lg border border-[var(--border-soft)] bg-[var(--bg-surface)] px-2.5 py-0.5 font-mono-tech text-[11px] font-bold text-[var(--ink-primary)]">
             {ruleMultiplier.toFixed(2)}x Score Multiplier
           </span>
           <span className="hidden font-mono-tech text-xs text-[var(--ink-secondary)] md:inline">
-            ← → Move · ↑/X Rotate · Z CCW · C Hold · Space Hard Drop
+            ← → Move (Hold glides) · ↑/X Rotate · Z CCW · C Hold · Space Drop
           </span>
         </div>
 
@@ -1328,7 +1449,7 @@ export function HardTetrisGame() {
           <div className="relative flex min-h-[430px] w-full max-w-[290px] items-center justify-center rounded-2xl border-2 border-[var(--border-ink)] bg-[#151A22] p-2 shadow-[0_4px_0_var(--border-ink)]">
             <canvas
               ref={canvasRef}
-              aria-label="Hard Tetris playfield"
+              aria-label="Tetris playfield"
               className="block h-auto w-full rounded-lg"
               style={{ aspectRatio: `${BOARD_W} / ${BOARD_H}` }}
             />
@@ -1336,16 +1457,16 @@ export function HardTetrisGame() {
             {status === "start" && (
               <div className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl bg-[#151A22]/88 p-5 text-center backdrop-blur-[2px]">
                 <p className="font-mono-tech text-[11px] font-bold tracking-widest text-[#EA8343] uppercase">
-                  Custom Difficulty Engine
+                  Custom Arcade Engine
                 </p>
                 <h3 className="mt-2 font-serif-display text-2xl font-bold text-[#F7F3EB]">
-                  Hard Tetris
+                  Tetris
                 </h3>
                 <p className="mt-2 text-xs leading-relaxed text-[#CBD3DF]">
-                  Starts fast at Level {rules.startLevel}.{" "}
-                  {rules.ghostEnabled ? "Ghost ON." : "Blind Drop (No Ghost)."}{" "}
+                  Starts at Level {rules.startLevel}.{" "}
+                  {rules.ghostEnabled ? "Ghost ON." : "Shadow OFF."}{" "}
                   {rules.garbageIntervalSec > 0
-                    ? `Garbage every ${rules.garbageIntervalSec}s.`
+                    ? `Row push every ${rules.garbageIntervalSec}s.`
                     : ""}{" "}
                   {rules.pentominoesEnabled ? "5-cell Pentominoes active." : ""}
                 </p>
@@ -1355,7 +1476,7 @@ export function HardTetrisGame() {
                   className="ink-button mt-5 inline-flex min-h-[44px] touch-manipulation items-center gap-2 rounded-xl bg-[var(--accent-orange-fill)] px-5 py-2.5 text-sm font-bold text-[#FFFDF9]"
                 >
                   <Play className="h-4 w-4" aria-hidden="true" />
-                  <span>Start Hard Tetris</span>
+                  <span>Start Tetris</span>
                 </button>
               </div>
             )}
@@ -1366,7 +1487,7 @@ export function HardTetrisGame() {
                   Paused
                 </h3>
                 <p className="mt-1 font-mono-tech text-xs text-[#CBD3DF]">
-                  Press P or Resume to continue drop
+                  Press P or Resume to keep playing
                 </p>
                 <div className="mt-4 flex flex-wrap justify-center gap-2">
                   <button
@@ -1438,12 +1559,15 @@ export function HardTetrisGame() {
             )}
           </div>
 
-          {/* Mobile & Touch Controls */}
+          {/* Mobile & Touch Controls (with hold-to-slide support) */}
           <div className="mt-4 w-full max-w-[320px] space-y-2">
             <div className="grid grid-cols-5 gap-1.5">
               <button
                 type="button"
-                onClick={() => moveHorizontal(-1)}
+                onPointerDown={() => startTouchRepeat(() => moveHorizontal(-1))}
+                onPointerUp={stopTouchRepeat}
+                onPointerLeave={stopTouchRepeat}
+                onPointerCancel={stopTouchRepeat}
                 aria-label="Move piece left"
                 className="ink-button flex h-11 touch-manipulation select-none items-center justify-center rounded-xl bg-[var(--bg-surface)] text-[var(--ink-primary)]"
               >
@@ -1459,7 +1583,10 @@ export function HardTetrisGame() {
               </button>
               <button
                 type="button"
-                onClick={() => softDrop()}
+                onPointerDown={() => startTouchRepeat(() => softDrop())}
+                onPointerUp={stopTouchRepeat}
+                onPointerLeave={stopTouchRepeat}
+                onPointerCancel={stopTouchRepeat}
                 aria-label="Soft drop"
                 className="ink-button flex h-11 touch-manipulation select-none items-center justify-center rounded-xl bg-[var(--bg-surface)] text-[var(--ink-primary)]"
               >
@@ -1475,7 +1602,10 @@ export function HardTetrisGame() {
               </button>
               <button
                 type="button"
-                onClick={() => moveHorizontal(1)}
+                onPointerDown={() => startTouchRepeat(() => moveHorizontal(1))}
+                onPointerUp={stopTouchRepeat}
+                onPointerLeave={stopTouchRepeat}
+                onPointerCancel={stopTouchRepeat}
                 aria-label="Move piece right"
                 className="ink-button flex h-11 touch-manipulation select-none items-center justify-center rounded-xl bg-[var(--bg-surface)] text-[var(--ink-primary)]"
               >
@@ -1497,7 +1627,7 @@ export function HardTetrisGame() {
                 onClick={() => hardDrop()}
                 className="ink-button flex h-11 touch-manipulation select-none items-center justify-center gap-1.5 rounded-xl bg-[var(--accent-orange-fill)] px-3 text-xs font-bold text-[#FFFDF9]"
               >
-                <span>Hard Drop (Space)</span>
+                <span>Drop Now (Space)</span>
               </button>
             </div>
           </div>
@@ -1557,8 +1687,8 @@ export function HardTetrisGame() {
                 </p>
                 <p className="font-mono-tech text-[10px] text-[var(--ink-muted)]">
                   {rules.garbageIntervalSec > 0
-                    ? `Garbage ${Math.round(hud.garbageProgress * 100)}%`
-                    : "Garbage OFF"}
+                    ? `Row push ${Math.round(hud.garbageProgress * 100)}%`
+                    : "Row push OFF"}
                 </p>
               </div>
             </div>
@@ -1603,7 +1733,7 @@ export function HardTetrisGame() {
             </div>
           </div>
 
-          {/* Hard Mode Presets & Live Rule Customization */}
+          {/* Presets & Live Rule Customization */}
           <div className="rounded-2xl border-2 border-[var(--border-ink)] bg-[var(--bg-surface)] p-4 sm:p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="flex items-center gap-1.5 font-mono-tech text-xs font-bold tracking-wider text-[var(--ink-primary)] uppercase">
@@ -1611,10 +1741,10 @@ export function HardTetrisGame() {
                   className="h-3.5 w-3.5 text-[var(--accent-orange)]"
                   aria-hidden="true"
                 />
-                <span>Customize Hard Mode Rules</span>
+                <span>Customize Rules</span>
               </p>
               <span className="font-hand text-base text-[var(--accent-blue)]">
-                Harder rules = bigger score multiplier
+                Extra challenge = bigger score multiplier
               </span>
             </div>
 
@@ -1658,7 +1788,7 @@ export function HardTetrisGame() {
                   Start Gravity
                 </p>
                 <div className="mt-1 flex gap-1">
-                  {([3, 5, 8, 10] as const).map((lv) => (
+                  {([1, 3, 5, 8] as const).map((lv) => (
                     <button
                       key={lv}
                       type="button"
@@ -1677,7 +1807,7 @@ export function HardTetrisGame() {
 
               <div>
                 <p className="font-mono-tech text-[10px] font-bold text-[var(--ink-muted)] uppercase">
-                  Garbage Attack
+                  Rising Rows
                 </p>
                 <div className="mt-1 flex gap-1">
                   {(
@@ -1707,7 +1837,7 @@ export function HardTetrisGame() {
 
               <div>
                 <p className="font-mono-tech text-[10px] font-bold text-[var(--ink-muted)] uppercase">
-                  Ghost / Hold
+                  Shadow / Hold
                 </p>
                 <div className="mt-1 flex gap-1">
                   <button

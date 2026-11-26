@@ -82,7 +82,7 @@ export const profileConfig: ProfileConfig = {
       custom: "Always happy to chat about interesting builds",
     },
     detail:
-      "Configurable status (via NEXT_PUBLIC_AVAILABILITY_MODE) — currently set to honest builder mode unless toggled.",
+      "Currently building applied AI systems, distributed infrastructure, and product experiments at BITS Pilani.",
   },
   socials: [
     {

@@ -234,7 +234,7 @@ export function ContactSection() {
                       value={senderName}
                       onChange={(e) => setSenderName(e.target.value)}
                       placeholder="Alex from ..."
-                      className="mt-1.5 w-full rounded-xl border-2 border-[var(--border-soft)] bg-[var(--bg-paper)] px-3.5 py-2 text-sm text-[var(--ink-primary)] focus:border-[var(--border-ink)] focus:outline-none"
+                      className="mt-1.5 w-full rounded-xl border-2 border-[var(--border-soft)] bg-[var(--bg-paper)] px-3.5 py-2 text-sm text-[var(--ink-primary)] transition-colors focus:border-[var(--border-ink)] focus:ring-2 focus:ring-[var(--accent-orange)]/25 focus:outline-none"
                     />
                   </div>
 
@@ -249,7 +249,7 @@ export function ContactSection() {
                       id="contact-topic"
                       value={topic}
                       onChange={(e) => setTopic(e.target.value)}
-                      className="mt-1.5 w-full rounded-xl border-2 border-[var(--border-soft)] bg-[var(--bg-paper)] px-3.5 py-2 text-sm text-[var(--ink-primary)] focus:border-[var(--border-ink)] focus:outline-none"
+                      className="mt-1.5 w-full rounded-xl border-2 border-[var(--border-soft)] bg-[var(--bg-paper)] px-3.5 py-2 text-sm text-[var(--ink-primary)] transition-colors focus:border-[var(--border-ink)] focus:ring-2 focus:ring-[var(--accent-orange)]/25 focus:outline-none"
                     >
                       <option>Collaboration / Project Idea</option>
                       <option>AI / ML or Product Role</option>
@@ -270,9 +270,15 @@ export function ContactSection() {
                       rows={5}
                       maxLength={1200}
                       value={message}
-                      onChange={(e) => setMessage(e.target.value)}
+                      onChange={(e) => {
+                        const nextVal = e.target.value;
+                        setMessage(nextVal);
+                        if (validationError && nextVal.trim().length >= 4) {
+                          setValidationError(null);
+                        }
+                      }}
                       placeholder="Tell me what you're building or exploring..."
-                      className="mt-1.5 w-full rounded-xl border-2 border-[var(--border-soft)] bg-[var(--bg-paper)] px-3.5 py-2 text-sm text-[var(--ink-primary)] focus:border-[var(--border-ink)] focus:outline-none"
+                      className="mt-1.5 w-full rounded-xl border-2 border-[var(--border-soft)] bg-[var(--bg-paper)] px-3.5 py-2 text-sm text-[var(--ink-primary)] transition-colors focus:border-[var(--border-ink)] focus:ring-2 focus:ring-[var(--accent-orange)]/25 focus:outline-none"
                     />
                   </div>
 

@@ -108,8 +108,8 @@ export const experiences: ExperienceItem[] = [
       "Built production-oriented anomaly detection pipelines, RAG tooling, and monitoring dashboards supporting Kerala's statewide public education data platform.",
     achievements: [
       "Built Python ML pipelines for anomaly detection across 40,000+ schools, reducing manual data-review effort by 70%.",
-      "Built a RAG-based AI assistant using FAISS/Pinecone and LLMs, cutting policy-query response times by 60%.",
-      "Developed Streamlit analytics dashboards for real-time data-quality monitoring and AI-driven insights for policy teams.",
+      "Architected a RAG-based AI assistant using FAISS/Pinecone and LLMs, cutting policy-query response times by 60%.",
+      "Created Streamlit analytics dashboards for real-time data-quality monitoring and AI-driven insights for policy teams.",
     ],
     metrics: [
       { value: 40000, suffix: "+", label: "Schools covered" },

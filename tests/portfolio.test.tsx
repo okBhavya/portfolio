@@ -140,6 +140,10 @@ describe("Bhavya Gupta Portfolio", () => {
     const globeProp = screen.getByRole("button", {
       name: /desk globe & badminton racket/i,
     });
+    expect(
+      screen.getByRole("button", { name: /mini nintendo console/i })
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/hard tetris/i)).not.toBeInTheDocument();
     fireEvent.click(globeProp);
 
     const globeDialog = screen.getByRole("dialog", {
@@ -192,12 +196,16 @@ describe("Bhavya Gupta Portfolio", () => {
     ).toBeInTheDocument();
   });
 
-  it("starts Hard Tetris, applies custom presets, and toggles mute safely", async () => {
+  it("starts Tetris, applies custom presets, and toggles mute safely", async () => {
     renderApp();
+
+    expect(
+      screen.getByRole("heading", { level: 2, name: /play fun game tetris/i })
+    ).toBeInTheDocument();
 
     const blindBtn = await screen.findByRole("button", { name: /^Blind Drop/i });
     fireEvent.click(blindBtn);
-    expect(screen.getByText(/1\.25x Score Multiplier/i)).toBeInTheDocument();
+    expect(screen.getByText(/1\.20x Score Multiplier/i)).toBeInTheDocument();
 
     const expSection = screen.getByRole("region", {
       name: /where i've shipped, analysed & led/i,
@@ -219,7 +227,7 @@ describe("Bhavya Gupta Portfolio", () => {
       expect(badge.parentElement).toHaveClass("bg-[var(--accent-blue-soft)]");
     }
 
-    const startBtn = screen.getByRole("button", { name: /start hard tetris/i });
+    const startBtn = screen.getByRole("button", { name: /start tetris/i });
     fireEvent.click(startBtn);
 
     expect(screen.getByRole("button", { name: /pause/i })).toBeInTheDocument();

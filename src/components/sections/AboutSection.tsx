@@ -134,7 +134,7 @@ export function AboutSection() {
                           className={`flex flex-1 flex-row items-center justify-between gap-2 rounded-xl border-2 px-3 py-2.5 text-left transition-all lg:flex-col lg:items-start lg:px-2.5 lg:py-3 ${
                             isSelected
                               ? "border-[var(--border-ink)] bg-[var(--accent-orange-fill)] text-[#FFFDF9] shadow-[0_3px_0_var(--border-ink)]"
-                              : "border-[var(--border-soft)] bg-[var(--bg-surface)] text-[var(--ink-primary)] hover:border-[var(--border-ink)]"
+                              : "border-[var(--border-soft)] bg-[var(--bg-surface)] text-[var(--ink-primary)] hover:-translate-y-0.5 hover:border-[var(--border-ink)]"
                           }`}
                         >
                           <span
