@@ -50,14 +50,14 @@ const DESK_PROPS: DeskPropMeta[] = [
     actionLabel: "Open Projects Lab",
     targetSection: "projects",
     day: {
-      points: "36,34 516,34 516,386 36,386",
-      labelX: 276,
-      labelY: 32,
+      points: "55,44 521,44 521,385 55,385",
+      labelX: 288,
+      labelY: 42,
     },
     night: {
-      points: "36,34 516,34 516,386 36,386",
-      labelX: 276,
-      labelY: 32,
+      points: "55,44 521,44 521,385 55,385",
+      labelX: 288,
+      labelY: 42,
     },
   },
   {
@@ -70,14 +70,14 @@ const DESK_PROPS: DeskPropMeta[] = [
     actionLabel: "View Experience Timeline",
     targetSection: "experience",
     day: {
-      points: "896,24 1338,24 1338,474 1140,474 1126,386 968,386 896,436",
-      labelX: 1117,
-      labelY: 26,
+      points: "889,34 1318,34 1318,471 1126,471 1112,385 959,385 889,434",
+      labelX: 1103,
+      labelY: 36,
     },
     night: {
-      points: "896,24 1338,24 1338,474 1140,474 1126,386 968,386 896,436",
-      labelX: 1117,
-      labelY: 26,
+      points: "889,34 1318,34 1318,471 1126,471 1112,385 959,385 889,434",
+      labelX: 1103,
+      labelY: 36,
     },
   },
   {
@@ -89,14 +89,14 @@ const DESK_PROPS: DeskPropMeta[] = [
     actionLabel: "See Courses & About",
     targetSection: "about",
     day: {
-      points: "64,540 296,540 296,620 390,620 390,726 64,726",
-      labelX: 210,
-      labelY: 534,
+      points: "82,535 307,535 307,612 398,612 398,715 82,715",
+      labelX: 224,
+      labelY: 529,
     },
     night: {
-      points: "64,540 296,540 296,620 390,620 390,726 64,726",
-      labelX: 210,
-      labelY: 534,
+      points: "82,535 307,535 307,612 398,612 398,715 82,715",
+      labelX: 224,
+      labelY: 529,
     },
   },
   {
@@ -110,14 +110,14 @@ const DESK_PROPS: DeskPropMeta[] = [
     targetSection: "projects",
     filterCategory: "AI / ML",
     day: {
-      points: "316,458 450,458 450,628 316,628",
-      labelX: 384,
-      labelY: 452,
+      points: "327,455 457,455 457,620 327,620",
+      labelX: 392,
+      labelY: 449,
     },
     night: {
-      points: "316,462 458,462 458,644 316,644",
-      labelX: 388,
-      labelY: 456,
+      points: "327,459 464,459 464,636 327,636",
+      labelX: 396,
+      labelY: 453,
     },
   },
   {
@@ -130,14 +130,14 @@ const DESK_PROPS: DeskPropMeta[] = [
     actionLabel: "Play Tetris",
     targetSection: "playground",
     day: {
-      points: "452,554 550,554 550,708 410,708 410,630 452,630",
-      labelX: 494,
-      labelY: 548,
+      points: "458,548 554,548 554,698 418,698 418,622 458,622",
+      labelX: 499,
+      labelY: 543,
     },
     night: {
-      points: "452,544 540,544 540,710 410,710 410,636 452,636",
-      labelX: 494,
-      labelY: 538,
+      points: "458,539 544,539 544,700 418,700 418,628 458,628",
+      labelX: 499,
+      labelY: 533,
     },
   },
   {
@@ -150,14 +150,14 @@ const DESK_PROPS: DeskPropMeta[] = [
     actionLabel: "Inspect Tech Workbench",
     targetSection: "skills",
     day: {
-      points: "554,486 852,486 852,690 554,690",
-      labelX: 703,
-      labelY: 480,
+      points: "557,482 846,482 846,680 557,680",
+      labelX: 702,
+      labelY: 477,
     },
     night: {
-      points: "566,576 854,576 854,704 566,704",
-      labelX: 710,
-      labelY: 572,
+      points: "569,570 848,570 848,694 569,694",
+      labelX: 709,
+      labelY: 566,
     },
   },
   {
@@ -171,14 +171,14 @@ const DESK_PROPS: DeskPropMeta[] = [
     actionLabel: "Explore Experience & About",
     targetSection: "experience",
     day: {
-      points: "912,392 1136,392 1146,596 1336,612 1336,722 912,722",
-      labelX: 1030,
-      labelY: 386,
+      points: "905,391 1122,391 1132,589 1316,605 1316,711 905,711",
+      labelX: 1019,
+      labelY: 385,
     },
     night: {
-      points: "912,392 1136,392 1146,596 1336,612 1336,722 912,722",
-      labelX: 1030,
-      labelY: 386,
+      points: "905,391 1122,391 1132,589 1316,605 1316,711 905,711",
+      labelX: 1019,
+      labelY: 385,
     },
   },
 ];
@@ -278,7 +278,7 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
         }}
       >
         <Image
-          src="/hero/desk-day-v4.png"
+          src="/hero/desk-day-v5.png"
           width={DAY_DIMENSIONS.width}
           height={DAY_DIMENSIONS.height}
           priority
@@ -290,7 +290,7 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
           className="hero-img-day block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
         />
         <Image
-          src="/hero/desk-night-v4.png"
+          src="/hero/desk-night-v5.png"
           width={NIGHT_DIMENSIONS.width}
           height={NIGHT_DIMENSIONS.height}
           loading={isNight || preloadOther ? "eager" : "lazy"}
