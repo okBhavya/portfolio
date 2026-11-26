@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowUp, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import { GitHubIcon, InstagramIcon, LinkedInIcon } from "./SocialIcons";
 import { profileConfig } from "@/data/profile";
 import { SignatureSvg } from "./SignatureSvg";
@@ -9,16 +9,12 @@ import { SignatureSvg } from "./SignatureSvg";
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   return (
     <footer className="border-t-2 border-[var(--border-ink)] bg-[var(--bg-surface)] py-10">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
           <div>
-            <SignatureSvg className="h-12 w-40 text-[var(--ink-primary)]" />
+            <SignatureSvg className="h-12 w-44 text-[var(--ink-primary)]" />
             <p className="mt-2 max-w-md text-xs leading-relaxed text-[var(--ink-secondary)]">
               Hand-crafted on warm digital paper in Pilani. Zero templates, zero third-party trackers, plenty of chai.
             </p>
@@ -65,16 +61,6 @@ export function Footer() {
             >
               <InstagramIcon className="h-4 w-4" />
             </a>
-
-            <button
-              type="button"
-              onClick={scrollToTop}
-              aria-label="Back to top"
-              className="ink-button ml-1 inline-flex items-center gap-1.5 rounded-xl bg-[var(--accent-orange)] px-3.5 py-2 text-xs font-bold text-[#FFFDF9]"
-            >
-              <ArrowUp className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Top</span>
-            </button>
           </div>
         </div>
 

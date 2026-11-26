@@ -34,6 +34,8 @@ describe("Bhavya Gupta Portfolio", () => {
     expect(screen.getAllByText(profileConfig.email).length).toBeGreaterThanOrEqual(1);
     expect(projects.filter((p) => p.featured)).toHaveLength(6);
     expect(experiences).toHaveLength(5);
+    expect(screen.queryByText("Behavioural cohorts")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Back to top" })).toBeInTheDocument();
   });
 
   it("toggles Day and Night desk lamp theme", () => {

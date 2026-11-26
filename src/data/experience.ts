@@ -91,7 +91,6 @@ export const experiences: ExperienceItem[] = [
     metrics: [
       { value: 12, prefix: "₹", suffix: " Cr+", label: "Transactions analysed" },
       { value: 5000, suffix: "+", label: "Students segmented" },
-      { value: 5, label: "Behavioural cohorts" },
     ],
     tags: ["Product Strategy", "Python", "K-Means", "RFM & Affinity", "Logistic Regression", "Gradient Boosting", "A/B Testing"],
     hasProductExplorer: true,
