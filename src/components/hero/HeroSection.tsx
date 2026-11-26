@@ -26,13 +26,13 @@ export function HeroSection({ onSelectProjectFilter }: HeroSectionProps) {
       className="border-b-2 border-[var(--border-soft)] pt-4 pb-14 sm:pt-8 sm:pb-20"
     >
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        {/* Top Centerpiece: Floating Hand-Drawn Desk Illustration (matching reference layout) */}
+        {/* Top Centerpiece: Floating Hand-Drawn Desk Illustration */}
         <HeroDeskScene onSelectProjectFilter={onSelectProjectFilter} />
 
-        {/* Minimal Centered Social Row directly under Desk (matching reference icon bar) */}
+        {/* Centered High-Contrast Social Row directly under Desk (>= 44x44 tap targets) */}
         <div
           aria-label="Quick social links"
-          className="mt-5 flex items-center justify-center gap-6 text-[var(--ink-muted)]"
+          className="mt-4 flex items-center justify-center gap-3 sm:gap-4"
         >
           <a
             href={
@@ -41,18 +41,19 @@ export function HeroSection({ onSelectProjectFilter }: HeroSectionProps) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn"
-            className="transition-colors hover:text-[var(--ink-primary)]"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-[var(--ink-secondary)] transition-colors hover:bg-[var(--bg-beige)] hover:text-[var(--ink-primary)]"
           >
             <LinkedInIcon className="h-6 w-6" />
           </a>
           <a
             href={
-              profileConfig.socials.find((s) => s.id === "instagram")?.href ?? "#"
+              profileConfig.socials.find((s) => s.id === "instagram")?.href ??
+              "#"
             }
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
-            className="transition-colors hover:text-[var(--ink-primary)]"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-[var(--ink-secondary)] transition-colors hover:bg-[var(--bg-beige)] hover:text-[var(--ink-primary)]"
           >
             <InstagramIcon className="h-6 w-6" />
           </a>
@@ -63,28 +64,28 @@ export function HeroSection({ onSelectProjectFilter }: HeroSectionProps) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub"
-            className="transition-colors hover:text-[var(--ink-primary)]"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-[var(--ink-secondary)] transition-colors hover:bg-[var(--bg-beige)] hover:text-[var(--ink-primary)]"
           >
             <GitHubIcon className="h-6 w-6" />
           </a>
           <a
             href={`mailto:${profileConfig.email}`}
             aria-label="Email"
-            className="transition-colors hover:text-[var(--ink-primary)]"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-[var(--ink-secondary)] transition-colors hover:bg-[var(--bg-beige)] hover:text-[var(--ink-primary)]"
           >
             <Mail className="h-6 w-6" aria-hidden="true" />
           </a>
         </div>
 
         {/* Clean Centered Editorial Bio Copy */}
-        <div className="mx-auto mt-7 max-w-2xl text-center">
+        <div className="mx-auto mt-6 max-w-2xl text-center">
           <p className="font-hand text-2xl font-bold text-[var(--accent-orange)] sm:text-3xl">
             {profileConfig.heroGreeting}
           </p>
 
           <h1
             id="hero-heading"
-            className="mt-1.5 font-serif-display text-2xl leading-[1.2] font-bold tracking-tight text-[var(--ink-primary)] sm:text-4xl"
+            className="text-balance mt-1.5 font-serif-display text-2xl leading-[1.2] font-bold tracking-tight text-[var(--ink-primary)] sm:text-4xl"
           >
             {profileConfig.heroHeadline}
           </h1>
@@ -96,7 +97,7 @@ export function HeroSection({ onSelectProjectFilter }: HeroSectionProps) {
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3.5">
             <a
               href="#projects"
-              className="ink-button inline-flex items-center gap-2 rounded-xl bg-[var(--accent-orange)] px-5 py-2.5 text-sm font-bold text-[#FFFDF9]"
+              className="ink-button inline-flex items-center gap-2 rounded-xl bg-[var(--accent-orange-fill)] px-5 py-2.5 text-sm font-bold text-[#FFFDF9]"
             >
               <span>Explore my work</span>
               <ArrowDownRight className="h-4 w-4" aria-hidden="true" />
@@ -105,14 +106,17 @@ export function HeroSection({ onSelectProjectFilter }: HeroSectionProps) {
               href="#contact"
               className="ink-button inline-flex items-center gap-2 rounded-xl bg-[var(--bg-surface)] px-5 py-2.5 text-sm font-bold text-[var(--ink-primary)]"
             >
-              <Mail className="h-4 w-4 text-[var(--accent-green)]" aria-hidden="true" />
+              <Mail
+                className="h-4 w-4 text-[var(--accent-green)]"
+                aria-hidden="true"
+              />
               <span>Let&apos;s connect</span>
             </a>
           </div>
 
           <p
             title={profileConfig.availability.detail}
-            className="mt-4 inline-flex items-center gap-2 font-mono-tech text-xs text-[var(--ink-muted)]"
+            className="mt-4 inline-flex items-center gap-2 font-mono-tech text-xs font-medium text-[var(--ink-muted)]"
           >
             <span
               aria-hidden="true"

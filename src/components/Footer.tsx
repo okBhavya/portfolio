@@ -10,7 +10,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t-2 border-[var(--border-ink)] bg-[var(--bg-surface)] py-10">
+    <footer className="border-t-2 border-[var(--border-ink)] bg-[var(--bg-surface)] pt-10 pb-20 sm:py-10">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
           <div>

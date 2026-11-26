@@ -31,18 +31,16 @@ export function SkillsSection({ onOpenProject }: SkillsSectionProps) {
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionReveal>
-          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="font-mono-tech text-xs font-semibold tracking-wider text-[var(--accent-green)] uppercase">
-                04 · Verified Technical Workbench
-              </p>
-              <h2
-                id="skills-heading"
-                className="mt-1 font-serif-display text-3xl font-bold tracking-tight text-[var(--ink-primary)] sm:text-4xl"
-              >
-                Tools I actually ship with
-              </h2>
-            </div>
+          <div>
+            <p className="font-mono-tech text-xs font-semibold tracking-wider text-[var(--accent-green)] uppercase">
+              04 · Verified Technical Workbench
+            </p>
+            <h2
+              id="skills-heading"
+              className="text-balance mt-1 font-serif-display text-3xl font-bold tracking-tight text-[var(--ink-primary)] sm:text-4xl"
+            >
+              Tools I actually ship with
+            </h2>
           </div>
         </SectionReveal>
 
@@ -77,7 +75,10 @@ export function SkillsSection({ onOpenProject }: SkillsSectionProps) {
                     className="ink-button inline-flex items-center gap-1 rounded-xl bg-[var(--bg-paper)] px-3 py-1.5 text-xs font-bold text-[var(--ink-primary)]"
                   >
                     <span>{proj.shortTitle}</span>
-                    <ArrowUpRight className="h-3.5 w-3.5 text-[var(--accent-orange)]" aria-hidden="true" />
+                    <ArrowUpRight
+                      className="h-3.5 w-3.5 text-[var(--accent-orange)]"
+                      aria-hidden="true"
+                    />
                   </button>
                 ))}
                 {matchedExperiences.map((exp) => (
@@ -94,45 +95,56 @@ export function SkillsSection({ onOpenProject }: SkillsSectionProps) {
           </div>
         </SectionReveal>
 
-        {/* 5 Category Grid */}
-        <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {skillCategories.map((cat, idx) => (
-            <SectionReveal
-              key={cat.id}
-              delay={idx * 0.04}
-              className={idx === 4 ? "md:col-span-2 lg:col-span-2" : ""}
-            >
-              <div className="ink-card h-full rounded-3xl p-5 sm:p-6">
-                <h3 className="font-serif-display text-lg font-bold text-[var(--ink-primary)]">
-                  {cat.title}
-                </h3>
-                <p className="mt-0.5 text-xs text-[var(--ink-muted)]">
-                  {cat.subtitle}
-                </p>
+        {/* Balanced 5-Category Grid: Row 1 (3 equal) + Row 2 (2 equal wide) on desktop; clean pairs on tablet */}
+        <div className="mt-8 grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-12">
+          {skillCategories.map((cat, idx) => {
+            const spanClass =
+              idx < 3
+                ? "lg:col-span-4"
+                : idx === 3
+                ? "lg:col-span-6"
+                : "md:col-span-2 lg:col-span-6";
 
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {cat.skills.map((skill) => {
-                    const isSelected = selectedSkill.name === skill.name;
-                    return (
-                      <button
-                        key={skill.name}
-                        type="button"
-                        onClick={() => setSelectedSkill(skill)}
-                        aria-pressed={isSelected}
-                        className={`rounded-xl border-2 px-3 py-1.5 text-xs font-bold transition-all ${
-                          isSelected
-                            ? "border-[var(--border-ink)] bg-[var(--accent-orange)] text-[#FFFDF9] shadow-[0_2px_0_var(--border-ink)]"
-                            : "border-[var(--border-soft)] bg-[var(--bg-paper)] text-[var(--ink-primary)] hover:border-[var(--border-ink)]"
-                        }`}
-                      >
-                        {skill.name}
-                      </button>
-                    );
-                  })}
+            return (
+              <SectionReveal
+                key={cat.id}
+                delay={idx * 0.04}
+                className={`flex ${spanClass}`}
+              >
+                <div className="ink-card flex h-full w-full flex-col justify-between rounded-3xl p-5 sm:p-6">
+                  <div>
+                    <h3 className="font-serif-display text-lg font-bold text-[var(--ink-primary)]">
+                      {cat.title}
+                    </h3>
+                    <p className="mt-0.5 text-xs text-[var(--ink-muted)]">
+                      {cat.subtitle}
+                    </p>
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {cat.skills.map((skill) => {
+                        const isSelected = selectedSkill.name === skill.name;
+                        return (
+                          <button
+                            key={skill.name}
+                            type="button"
+                            onClick={() => setSelectedSkill(skill)}
+                            aria-pressed={isSelected}
+                            className={`rounded-xl border-2 px-3 py-1.5 text-xs font-bold transition-all ${
+                              isSelected
+                                ? "border-[var(--border-ink)] bg-[var(--accent-orange-fill)] text-[#FFFDF9] shadow-[0_2px_0_var(--border-ink)]"
+                                : "border-[var(--border-soft)] bg-[var(--bg-paper)] text-[var(--ink-primary)] hover:border-[var(--border-ink)]"
+                            }`}
+                          >
+                            {skill.name}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </SectionReveal>
-          ))}
+              </SectionReveal>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useReducedMotion } from "motion/react";
+import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 
 interface AnimatedCounterProps {
   value: number;
@@ -17,10 +17,10 @@ export function AnimatedCounter({
   prefix = "",
   suffix = "",
   decimals = 0,
-  durationMs = 850,
+  durationMs = 380,
   className = "",
 }: AnimatedCounterProps) {
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = usePrefersReducedMotion();
   const ref = useRef<HTMLSpanElement>(null);
   const [animatedValue, setAnimatedValue] = useState<number>(value);
   const hasAnimatedRef = useRef<boolean>(false);
@@ -59,7 +59,7 @@ export function AnimatedCounter({
 
         rafId = window.requestAnimationFrame(tick);
       },
-      { threshold: 0.3 }
+      { threshold: 0.05, rootMargin: "120px 0px" }
     );
 
     observer.observe(node);

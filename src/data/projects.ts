@@ -15,6 +15,12 @@ export interface ProjectMedia {
   alt: string;
   caption: string;
   isAnimated?: boolean;
+  mediaKind?: "video" | "chart" | "diagram";
+  videoMp4?: string;
+  videoWebm?: string;
+  posterSrc?: string;
+  width?: number;
+  height?: number;
 }
 
 export interface ArchitectureNode {
@@ -25,6 +31,7 @@ export interface ArchitectureNode {
 
 export interface ProjectItem {
   id: string;
+  slug: string;
   title: string;
   shortTitle: string;
   tagline: string;
@@ -55,6 +62,7 @@ export const projectCategories: ("All" | ProjectCategory)[] = [
 export const projects: ProjectItem[] = [
   {
     id: "world-models-mpc",
+    slug: "world-models",
     title: "Action-Conditioned World Models & Predictive Control",
     shortTitle: "World Models & MPC",
     tagline:
@@ -123,25 +131,40 @@ export const projects: ProjectItem[] = [
     ],
     media: [
       {
-        src: "/projects/world-models/demo.gif",
+        src: "/projects/world-models/demo-poster.png",
+        videoMp4: "/projects/world-models/demo.mp4",
+        videoWebm: "/projects/world-models/demo.webm",
+        posterSrc: "/projects/world-models/demo-poster.png",
         alt: "Top-down closed-loop MPC rollout in MetaDrive simulator",
         caption: "Closed-loop MPC top-down rollout on procedural curve map SC.",
         isAnimated: true,
+        mediaKind: "video",
+        width: 690,
+        height: 310,
       },
       {
         src: "/projects/world-models/benchmark_comparison.png",
         alt: "Controller benchmark comparison chart",
         caption: "Closed-loop benchmark across unseen seeds, unseen layouts, and dynamic traffic.",
+        mediaKind: "chart",
+        width: 2250,
+        height: 675,
       },
       {
         src: "/projects/world-models/prediction_error_growth.png",
         alt: "Autoregressive prediction error growth from 1 to 20 steps",
         caption: "Open-loop error growth (0.022 m at 1 step -> 0.635 m at 10 steps), mitigated by 10 Hz replanning.",
+        mediaKind: "chart",
+        width: 1650,
+        height: 675,
       },
       {
         src: "/projects/world-models/ablation_a_safety.png",
         alt: "Ablation chart showing impact of explicit safety constraints",
         caption: "Ablation A: Explicit safety constraints halve out-of-road rate (20% vs 40%).",
+        mediaKind: "chart",
+        width: 1050,
+        height: 675,
       },
     ],
     highlights: [
@@ -153,6 +176,7 @@ export const projects: ProjectItem[] = [
   },
   {
     id: "flood-mapping",
+    slug: "planet-sentinel",
     title: "Flood Extent Mapping from Satellite Imagery",
     shortTitle: "Planet Sentinel",
     tagline:
@@ -216,6 +240,7 @@ export const projects: ProjectItem[] = [
   },
   {
     id: "distributed-task-queue",
+    slug: "task-queue-engine",
     title: "TQE — Distributed Task Queue Engine",
     shortTitle: "Task Queue Engine",
     tagline:
@@ -292,6 +317,7 @@ export const projects: ProjectItem[] = [
   },
   {
     id: "customer-segmentation",
+    slug: "customer-intelligence",
     title: "Customer Intelligence & Banner Ranking Engine",
     shortTitle: "Customer Intelligence",
     tagline:
@@ -364,21 +390,33 @@ export const projects: ProjectItem[] = [
         src: "/projects/customer-seg/segment_outcomes.png",
         alt: "Behavioral customer segment outcomes across 7 K-Means clusters",
         caption: "Seven K-Means customer archetypes validated out-of-time (Power Buyers drive 47.4% of test revenue).",
+        mediaKind: "chart",
+        width: 1784,
+        height: 1482,
       },
       {
         src: "/projects/customer-seg/nba_policy_simulation.png",
         alt: "Next-Best-Action expected value policy simulation chart",
         caption: "Model EV policy delivers $3.01M simulated EV by suppressing unprofitable contacts.",
+        mediaKind: "chart",
+        width: 1350,
+        height: 750,
       },
       {
         src: "/projects/customer-seg/banner_ranking_ndcg.png",
         alt: "Category banner ranking NDCG@10 comparison",
         caption: "LightGBM LambdaRank improves NDCG@10 by +2.58% over Global Popularity.",
+        mediaKind: "chart",
+        width: 1650,
+        height: 675,
       },
       {
         src: "/projects/customer-seg/power_curve.png",
         alt: "Statistical power and MDE curve with CUPED variance reduction",
         caption: "CUPED pre-period spend covariate reduces required variance by 17.11% (1.21x effective sample size).",
+        mediaKind: "chart",
+        width: 1050,
+        height: 750,
       },
     ],
     highlights: [
@@ -390,6 +428,7 @@ export const projects: ProjectItem[] = [
   },
   {
     id: "continual-learning",
+    slug: "continual-rl",
     title: "CAR-SR — Continual RL Under Task Conflict",
     shortTitle: "CAR-SR Continual RL",
     tagline:
@@ -457,20 +496,32 @@ export const projects: ProjectItem[] = [
     ],
     media: [
       {
-        src: "/projects/continual-rl/agent_demo.gif",
+        src: "/projects/continual-rl/agent_demo-poster.png",
+        videoMp4: "/projects/continual-rl/agent_demo.mp4",
+        videoWebm: "/projects/continual-rl/agent_demo.webm",
+        posterSrc: "/projects/continual-rl/agent_demo-poster.png",
         alt: "Trained CAR-SR continual RL agent balancing across task shifts",
         caption: "Live checkpoint rollout demonstrating retained policy control across shifted physics.",
         isAnimated: true,
+        mediaKind: "video",
+        width: 588,
+        height: 340,
       },
       {
         src: "/projects/continual-rl/forgetting_vs_conflict.png",
         alt: "Catastrophic forgetting across graduated conflict regimes",
         caption: "CAR-SR reduces partial-conflict forgetting to 97.4 vs 142.3 (Replay) and 168.4 (Naive).",
+        mediaKind: "chart",
+        width: 2400,
+        height: 1650,
       },
       {
         src: "/projects/continual-rl/stability_plasticity_pareto.png",
         alt: "Stability vs plasticity Pareto frontier across CRL methods",
         caption: "Retention-plasticity trade-off across 5 algorithms and ablation variants.",
+        mediaKind: "chart",
+        width: 2400,
+        height: 1800,
       },
     ],
     highlights: [
@@ -481,6 +532,7 @@ export const projects: ProjectItem[] = [
   },
   {
     id: "calibrai",
+    slug: "calibrai",
     title: "CalibrAI — Trust Calibration Signals for AI Assistants",
     shortTitle: "CalibrAI Extension",
     tagline:
@@ -557,6 +609,7 @@ export const projects: ProjectItem[] = [
   },
   {
     id: "planpilot",
+    slug: "planpilot",
     title: "PlanPilot — AI Production Scheduling Copilot",
     shortTitle: "PlanPilot",
     tagline:
@@ -634,6 +687,7 @@ export const projects: ProjectItem[] = [
   },
   {
     id: "internship-hunter",
+    slug: "internship-hunter",
     title: "Internship Hunter — Remote Technical Role Matcher",
     shortTitle: "Internship Hunter",
     tagline:

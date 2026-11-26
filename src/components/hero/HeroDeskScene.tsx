@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { X } from "lucide-react";
+import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import { useDeskTheme } from "@/components/ThemeProvider";
 import { profileConfig } from "@/data/profile";
 import type { ProjectCategory } from "@/data/projects";
@@ -14,14 +15,12 @@ export type DeskObjectId =
   | "books"
   | "window"
   | "mug"
-  | "globe"
-  | "badminton";
+  | "interests";
 
-interface HotspotBox {
-  left: string;
-  top: string;
-  width: string;
-  height: string;
+interface SvgHotspotSpec {
+  points: string;
+  labelX: number;
+  labelY: number;
 }
 
 interface DeskPropMeta {
@@ -33,9 +32,12 @@ interface DeskPropMeta {
   actionLabel: string;
   targetSection: string;
   filterCategory?: ProjectCategory;
-  dayBox: HotspotBox;
-  nightBox: HotspotBox;
+  day: SvgHotspotSpec;
+  night: SvgHotspotSpec;
 }
+
+const DAY_DIMENSIONS = { width: 1256, height: 548 } as const;
+const NIGHT_DIMENSIONS = { width: 1179, height: 574 } as const;
 
 const DESK_PROPS: DeskPropMeta[] = [
   {
@@ -47,8 +49,16 @@ const DESK_PROPS: DeskPropMeta[] = [
       "6 flagship builds spanning autonomous world models, Sentinel SAR flood mapping, distributed task queues, continual RL, and 42M-event customer analytics.",
     actionLabel: "Open Projects Lab",
     targetSection: "projects",
-    dayBox: { left: "6%", top: "3%", width: "32%", height: "47%" },
-    nightBox: { left: "10%", top: "3%", width: "28%", height: "39%" },
+    day: {
+      points: "82,24 446,24 446,294 82,294",
+      labelX: 264,
+      labelY: 18,
+    },
+    night: {
+      points: "124,26 422,26 422,248 124,248",
+      labelX: 273,
+      labelY: 18,
+    },
   },
   {
     id: "window",
@@ -59,19 +69,35 @@ const DESK_PROPS: DeskPropMeta[] = [
       "Studying Computer Science at BITS Pilani; spent Summer 2025 in Kerala interning at KITE on the Samagra statewide education platform.",
     actionLabel: "View Experience Timeline",
     targetSection: "experience",
-    dayBox: { left: "68%", top: "1%", width: "27%", height: "52%" },
-    nightBox: { left: "63%", top: "1%", width: "28%", height: "44%" },
+    day: {
+      points: "866,11 1195,11 1195,326 1018,326 985,270 898,266 866,306",
+      labelX: 1030,
+      labelY: 16,
+    },
+    night: {
+      points: "776,15 1076,15 1076,288 1044,288 994,238 926,238 890,288 776,288",
+      labelX: 926,
+      labelY: 14,
+    },
   },
   {
     id: "books",
-    label: "Textbooks and Courses — Read About & Education",
+    label: "Textbooks and Headphones — Read About & Education",
     handNote: "Coursework & BITS '27",
     title: `${profileConfig.education.shortName} — ${profileConfig.education.degree}`,
     description: `${profileConfig.education.period}. Core coursework in DSA, Algorithms, OOP, DBMS, Computer Networks, Deep Learning, RL, and HCI.`,
     actionLabel: "See Courses & About",
     targetSection: "about",
-    dayBox: { left: "8%", top: "53%", width: "17%", height: "23%" },
-    nightBox: { left: "8%", top: "58%", width: "18%", height: "27%" },
+    day: {
+      points: "96,332 312,332 312,448 370,448 370,524 96,524",
+      labelX: 215,
+      labelY: 328,
+    },
+    night: {
+      points: "94,358 206,358 206,410 320,410 320,520 94,520",
+      labelX: 164,
+      labelY: 346,
+    },
   },
   {
     id: "owlbot",
@@ -83,20 +109,36 @@ const DESK_PROPS: DeskPropMeta[] = [
     actionLabel: "Filter AI / ML Projects",
     targetSection: "projects",
     filterCategory: "AI / ML",
-    dayBox: { left: "26%", top: "45%", width: "10%", height: "28%" },
-    nightBox: { left: "18%", top: "42%", width: "11%", height: "28%" },
+    day: {
+      points: "314,260 442,260 442,452 314,452",
+      labelX: 380,
+      labelY: 254,
+    },
+    night: {
+      points: "208,244 324,244 324,424 208,424",
+      labelX: 266,
+      labelY: 238,
+    },
   },
   {
     id: "mug",
-    label: "Chai Mug — Play Hard Tetris",
+    label: "Chai Mug & Sketchpad — Play Hard Tetris",
     handNote: "Play Hard Tetris!",
     title: "Chai Break · Hard Tetris",
     description:
       "Need a breather from reading case studies? Custom-configure gravity, blind ghost, rising garbage, or pentomino chaos in Hard Tetris.",
     actionLabel: "Play Hard Tetris",
     targetSection: "playground",
-    dayBox: { left: "34%", top: "58%", width: "8%", height: "20%" },
-    nightBox: { left: "28%", top: "52%", width: "7%", height: "17%" },
+    day: {
+      points: "444,310 522,310 522,506 404,506 404,454 444,454",
+      labelX: 466,
+      labelY: 304,
+    },
+    night: {
+      points: "326,296 512,296 512,516 326,516",
+      labelX: 400,
+      labelY: 288,
+    },
   },
   {
     id: "laptop",
@@ -107,32 +149,39 @@ const DESK_PROPS: DeskPropMeta[] = [
       "PyTorch, DuckDB, Redis Lua scripts, FastAPI, PostgreSQL, TypeScript, and reproducible test suites.",
     actionLabel: "Inspect Tech Workbench",
     targetSection: "skills",
-    dayBox: { left: "41%", top: "49%", width: "18%", height: "23%" },
-    nightBox: { left: "49%", top: "62%", width: "22%", height: "17%" },
+    day: {
+      points: "524,290 756,290 756,484 524,484",
+      labelX: 640,
+      labelY: 286,
+    },
+    night: {
+      points: "574,398 882,398 882,504 574,504",
+      labelX: 728,
+      labelY: 390,
+    },
   },
   {
-    id: "globe",
-    label: "Desk Globe — Explore Interests and Impact",
+    id: "interests",
+    label:
+      "Desk Globe & Badminton Racket — Explore Interests & Curiosity",
     handNote: "Interests & curiosity",
-    title: "Real-World Problems & Global Curiosity",
+    title: "Interests, Impact & Off-Clock",
     description:
-      "Interested in climate tech (AgriGyan MVP in 48 hrs), Sentinel SAR flood mapping across 3,656 km², travel, and startups.",
-    actionLabel: "Explore About & Interests",
-    targetSection: "about",
-    dayBox: { left: "61%", top: "36%", width: "14%", height: "37%" },
-    nightBox: { left: "75%", top: "41%", width: "13%", height: "32%" },
-  },
-  {
-    id: "badminton",
-    label: "Badminton Racket — See Campus Sports and Leadership",
-    handNote: "BOSM & off-clock",
-    title: "Beyond Code: Campus Sports & Leadership",
-    description:
-      "Raised ₹7 lakh for BOSM leading a 45-member Department of Legacy team—and unwind on the badminton court.",
-    actionLabel: "See Leadership & Impact",
+      "Raised ₹7 lakh for BOSM leading a 45-member Department of Legacy team, shipped the AgriGyan climate-tech MVP in 48 hrs, mapped 3,656 km² of floods, and unwind on the badminton court.",
+    actionLabel: "Explore Experience & About",
     targetSection: "experience",
-    dayBox: { left: "75%", top: "55%", width: "19%", height: "22%" },
-    nightBox: { left: "68%", top: "57%", width: "24%", height: "26%" },
+    day: {
+      points:
+        "824,290 912,268 986,278 1018,356 1018,402 1176,402 1176,508 946,508 824,492",
+      labelX: 938,
+      labelY: 256,
+    },
+    night: {
+      points:
+        "898,240 1004,240 1058,296 1080,450 1080,534 868,534 814,442 814,378 898,378",
+      labelX: 968,
+      labelY: 228,
+    },
   },
 ];
 
@@ -142,12 +191,19 @@ interface HeroDeskSceneProps {
 
 export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
   const { theme } = useDeskTheme();
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = usePrefersReducedMotion();
   const [hoveredProp, setHoveredProp] = useState<DeskPropMeta | null>(null);
   const [activePopover, setActivePopover] = useState<DeskPropMeta | null>(null);
   const [tilt, setTilt] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [preloadOther, setPreloadOther] = useState(false);
 
   const isNight = theme === "night";
+  const dims = isNight ? NIGHT_DIMENSIONS : DAY_DIMENSIONS;
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setPreloadOther(true), 4500);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const navigateToSection = (sectionId: string, filter?: ProjectCategory) => {
     if (filter && onSelectProjectFilter) {
@@ -173,12 +229,25 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
     setActivePopover(prop);
   };
 
-  const handlePointerMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (prefersReduced) return;
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (prefersReduced || e.pointerType !== "mouse") return;
     const rect = e.currentTarget.getBoundingClientRect();
     const nx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
     const ny = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
     setTilt({ x: nx * 3.5, y: ny * 2.5 });
+  };
+
+  const handleHotspotPointerEnter = (
+    e: React.PointerEvent<SVGGElement>,
+    prop: DeskPropMeta
+  ) => {
+    if (
+      e.pointerType === "mouse" &&
+      typeof window !== "undefined" &&
+      window.matchMedia("(hover: hover)").matches
+    ) {
+      setHoveredProp(prop);
+    }
   };
 
   const resetPointer = () => {
@@ -186,116 +255,160 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
     setHoveredProp(null);
   };
 
+  const hoveredSpec = hoveredProp
+    ? isNight
+      ? hoveredProp.night
+      : hoveredProp.day
+    : null;
+
   return (
     <div
-      className="relative mx-auto w-full max-w-[920px] select-none"
-      onMouseMove={handlePointerMove}
-      onMouseLeave={resetPointer}
+      className="relative mx-auto w-full max-w-[920px] select-none [-webkit-tap-highlight-color:transparent]"
+      onPointerMove={handlePointerMove}
+      onPointerLeave={resetPointer}
     >
-      {/* Clean floating illustration stage matching gkoberger.com (no outer border box) */}
+      {/* Single aspect-ratio locked wrapper containing both images and exact SVG overlay */}
       <div
-        className="relative mx-auto w-full"
+        className="hero-stage relative mx-auto w-full select-none [-webkit-tap-highlight-color:transparent]"
         style={{
           transform: `translate3d(${tilt.x}px, ${tilt.y}px, 0)`,
           transition: prefersReduced ? "none" : "transform 180ms ease-out",
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={isNight ? "/hero/desk-night.png" : "/hero/desk-day.png"}
-          alt={
-            isNight
-              ? "Hand-drawn night-mode illustration of Bhavya Gupta sleeping at his desk beside his closed laptop, reading owl, starry BITS Pilani clock tower window, books, mug, globe, and badminton racket"
-              : "Hand-drawn illustration of Bhavya Gupta smiling behind his sticker-covered laptop at a desk with a My Projects corkboard, BITS Pilani clock tower window, owl, books, headphones, chai mug, globe, and badminton racket"
-          }
-          className="block h-auto w-full"
+        <Image
+          src="/hero/desk-day.png"
+          width={DAY_DIMENSIONS.width}
+          height={DAY_DIMENSIONS.height}
+          priority
+          fetchPriority="high"
+          decoding="sync"
+          sizes="(max-width: 960px) 96vw, 920px"
+          draggable={false}
+          alt="Hand-drawn illustration of Bhavya Gupta smiling behind his sticker-covered laptop at a desk with a My Projects corkboard, BITS Pilani clock tower window, owl, books, headphones, chai mug, globe, and badminton racket"
+          className="hero-img-day block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
+        />
+        <Image
+          src="/hero/desk-night.png"
+          width={NIGHT_DIMENSIONS.width}
+          height={NIGHT_DIMENSIONS.height}
+          loading={isNight || preloadOther ? "eager" : "lazy"}
+          decoding="sync"
+          sizes="(max-width: 960px) 96vw, 920px"
+          draggable={false}
+          alt="Hand-drawn night-mode illustration of Bhavya Gupta sleeping at his desk beside his closed laptop, reading owl, starry BITS Pilani clock tower window, books, mug, globe, and badminton racket"
+          className="hero-img-night block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
         />
 
-        {/* Interactive invisible object hotspots with subtle handwritten callouts */}
-        {DESK_PROPS.map((prop) => {
-          const box = isNight ? prop.nightBox : prop.dayBox;
-          const isHovered = hoveredProp?.id === prop.id;
-          return (
-            <button
-              key={prop.id}
-              type="button"
-              aria-label={prop.label}
-              onMouseEnter={() => setHoveredProp(prop)}
-              onFocus={() => setHoveredProp(prop)}
-              onBlur={() => setHoveredProp(null)}
-              onClick={() => handlePropActivate(prop)}
-              style={{
-                left: box.left,
-                top: box.top,
-                width: box.width,
-                height: box.height,
-              }}
-              className="group absolute cursor-pointer rounded-2xl border-2 border-transparent transition-colors hover:border-[var(--accent-blue)]/45 hover:bg-[var(--accent-blue)]/8 focus-visible:border-[var(--accent-orange)] focus-visible:outline-none"
-            >
-              {isHovered && (
-                <span className="pointer-events-none absolute -top-7 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-lg bg-[var(--bg-surface)]/95 px-2.5 py-0.5 font-hand text-base font-bold text-[var(--accent-blue)] shadow-sm ring-1 ring-[var(--border-soft)]">
-                  {prop.handNote}
-                </span>
-              )}
-            </button>
-          );
-        })}
+        {/* Inline SVG hotspot map locked directly to natural pixel coordinates */}
+        <svg
+          viewBox={`0 0 ${dims.width} ${dims.height}`}
+          className="absolute inset-0 h-full w-full overflow-visible"
+          aria-label="Interactive desk workspace hotspots"
+        >
+          {DESK_PROPS.map((prop) => {
+            const spec = isNight ? prop.night : prop.day;
+            return (
+              <g
+                key={prop.id}
+                role="button"
+                tabIndex={0}
+                aria-label={prop.label}
+                className="hero-svg-hotspot"
+                onPointerEnter={(e) => handleHotspotPointerEnter(e, prop)}
+                onPointerLeave={() =>
+                  setHoveredProp((curr) => (curr?.id === prop.id ? null : curr))
+                }
+                onFocus={() => {
+                  if (
+                    typeof window !== "undefined" &&
+                    window.matchMedia("(hover: hover)").matches
+                  ) {
+                    setHoveredProp(prop);
+                  }
+                }}
+                onBlur={() =>
+                  setHoveredProp((curr) => (curr?.id === prop.id ? null : curr))
+                }
+                onClick={() => handlePropActivate(prop)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handlePropActivate(prop);
+                  }
+                }}
+              >
+                <polygon
+                  points={spec.points}
+                  fill="transparent"
+                  stroke="none"
+                  className="hero-svg-shape"
+                />
+              </g>
+            );
+          })}
+        </svg>
+
+        {/* Handwritten hover callout (rendered strictly via hover:hover pointer/focus interactions) */}
+        {hoveredProp && hoveredSpec && (
+          <div
+            aria-hidden="true"
+            style={{
+              left: `${(hoveredSpec.labelX / dims.width) * 100}%`,
+              top: `${(hoveredSpec.labelY / dims.height) * 100}%`,
+            }}
+            className={`hero-hand-tooltip pointer-events-none absolute z-10 -translate-x-1/2 whitespace-nowrap rounded-lg bg-[var(--bg-surface)]/95 px-2.5 py-0.5 font-hand text-base font-bold text-[var(--accent-blue)] shadow-sm ring-1 ring-[var(--border-soft)] ${
+              hoveredSpec.labelY < 80 ? "translate-y-1" : "-translate-y-full"
+            }`}
+          >
+            {hoveredProp.handNote}
+          </div>
+        )}
       </div>
 
       {/* Contextual Popover Card inside Hero */}
-      <AnimatePresence>
-        {activePopover && (
-          <motion.div
-            role="dialog"
-            aria-label={activePopover.title}
-            initial={
-              prefersReduced ? { opacity: 1 } : { opacity: 0, y: 10, scale: 0.98 }
-            }
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={
-              prefersReduced ? { opacity: 0 } : { opacity: 0, y: 6, scale: 0.98 }
-            }
-            transition={{ duration: 0.16 }}
-            className="ink-card absolute right-3 bottom-3 left-3 z-20 mx-auto max-w-md rounded-2xl p-4 sm:right-6 sm:bottom-4 sm:left-auto"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="font-mono-tech text-[11px] font-semibold tracking-wider text-[var(--accent-orange)] uppercase">
-                  {activePopover.handNote}
-                </p>
-                <h3 className="mt-0.5 font-serif-display text-lg font-bold text-[var(--ink-primary)]">
-                  {activePopover.title}
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setActivePopover(null)}
-                aria-label="Close desk note"
-                className="rounded-lg border border-[var(--border-soft)] p-1 text-[var(--ink-muted)] hover:border-[var(--border-ink)] hover:text-[var(--ink-primary)]"
-              >
-                <X className="h-4 w-4" aria-hidden="true" />
-              </button>
+      {activePopover && (
+        <div
+          role="dialog"
+          aria-label={activePopover.title}
+          className="surface-enter ink-card absolute right-3 bottom-3 left-3 z-20 mx-auto max-w-md rounded-2xl p-4 sm:right-6 sm:bottom-4 sm:left-auto"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="font-mono-tech text-[11px] font-semibold tracking-wider text-[var(--accent-orange)] uppercase">
+                {activePopover.handNote}
+              </p>
+              <h3 className="mt-0.5 font-serif-display text-lg font-bold text-[var(--ink-primary)]">
+                {activePopover.title}
+              </h3>
             </div>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--ink-secondary)]">
-              {activePopover.description}
-            </p>
-            <div className="mt-3 flex justify-end">
-              <button
-                type="button"
-                onClick={() =>
-                  navigateToSection(
-                    activePopover.targetSection,
-                    activePopover.filterCategory
-                  )
-                }
-                className="ink-button rounded-xl bg-[var(--accent-orange)] px-3.5 py-1.5 text-xs font-bold text-[#FFFDF9]"
-              >
-                {activePopover.actionLabel} →
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <button
+              type="button"
+              onClick={() => setActivePopover(null)}
+              aria-label="Close desk note"
+              className="rounded-lg border border-[var(--border-soft)] p-1.5 text-[var(--ink-secondary)] hover:border-[var(--border-ink)] hover:text-[var(--ink-primary)]"
+            >
+              <X className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
+          <p className="mt-2 text-sm leading-relaxed text-[var(--ink-secondary)]">
+            {activePopover.description}
+          </p>
+          <div className="mt-3 flex justify-end">
+            <button
+              type="button"
+              onClick={() =>
+                navigateToSection(
+                  activePopover.targetSection,
+                  activePopover.filterCategory
+                )
+              }
+              className="ink-button rounded-xl bg-[var(--accent-orange-fill)] px-3.5 py-2 text-xs font-bold text-[#FFFDF9]"
+            >
+              {activePopover.actionLabel} →
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

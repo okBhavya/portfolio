@@ -74,53 +74,59 @@ export function ExperienceSection() {
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionReveal>
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
+          <div className="flex flex-col gap-5">
+            <div className="max-w-3xl">
               <p className="font-mono-tech text-xs font-semibold tracking-wider text-[var(--accent-green)] uppercase">
                 02 · Career &amp; Leadership Journey
               </p>
               <h2
                 id="experience-heading"
-                className="mt-1 font-serif-display text-3xl font-bold tracking-tight text-[var(--ink-primary)] sm:text-4xl"
+                className="text-balance mt-1 font-serif-display text-3xl font-bold tracking-tight text-[var(--ink-primary)] sm:text-4xl"
               >
                 Where I&apos;ve shipped, analysed &amp; led
               </h2>
             </div>
 
-            {/* Timeline filter pills */}
-            <div
-              role="group"
-              aria-label="Filter experience by category"
-              className="flex flex-wrap gap-2"
-            >
-              {(
-                [
-                  { id: "all", label: "All Milestones" },
-                  { id: "work", label: "Engineering & Product" },
-                  { id: "leadership", label: "Leadership" },
-                  { id: "impact", label: "Bootcamps & NSS" },
-                ] as const
-              ).map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setFilterKind(tab.id)}
-                  aria-pressed={filterKind === tab.id}
-                  className={`rounded-xl border-2 px-3 py-1.5 text-xs font-bold transition-colors ${
-                    filterKind === tab.id
-                      ? "border-[var(--border-ink)] bg-[var(--ink-primary)] text-[var(--bg-surface)]"
-                      : "border-[var(--border-soft)] bg-[var(--bg-surface)] text-[var(--ink-secondary)] hover:border-[var(--border-ink)]"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+            {/* Dedicated Filter Chip Row */}
+            <div className="relative">
+              <div
+                role="group"
+                aria-label="Filter experience by category"
+                className="no-scrollbar flex flex-nowrap gap-2 overflow-x-auto pb-1 pr-6 sm:flex-wrap sm:overflow-visible sm:pr-0"
+              >
+                {(
+                  [
+                    { id: "all", label: "All Milestones" },
+                    { id: "work", label: "Engineering & Product" },
+                    { id: "leadership", label: "Leadership" },
+                    { id: "impact", label: "Bootcamps & NSS" },
+                  ] as const
+                ).map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setFilterKind(tab.id)}
+                    aria-pressed={filterKind === tab.id}
+                    className={`shrink-0 rounded-xl border-2 px-3.5 py-2 text-xs font-bold transition-colors ${
+                      filterKind === tab.id
+                        ? "border-[var(--border-ink)] bg-[var(--ink-primary)] text-[var(--bg-surface)]"
+                        : "border-[var(--border-soft)] bg-[var(--bg-surface)] text-[var(--ink-secondary)] hover:border-[var(--border-ink)]"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute top-0 right-0 bottom-1 w-8 bg-gradient-to-l from-[var(--bg-paper)] to-transparent sm:hidden"
+              />
             </div>
           </div>
         </SectionReveal>
 
         {/* Interactive Vertical Spine */}
-        <div className="relative mt-12">
+        <div className="relative mt-10">
           <div
             aria-hidden="true"
             className="absolute top-2 bottom-2 left-4 hidden w-[3px] rounded-full bg-[var(--border-soft)] sm:block"
@@ -132,7 +138,7 @@ export function ExperienceSection() {
               const KindIcon = getKindIcon(exp.kind);
 
               return (
-                <SectionReveal key={exp.id} delay={idx * 0.05}>
+                <SectionReveal key={exp.id} delay={idx * 0.04}>
                   <article className="relative sm:pl-12">
                     {/* Timeline Node Dot */}
                     <span
@@ -147,7 +153,10 @@ export function ExperienceSection() {
                             <span
                               className={`inline-flex items-center gap-1.5 rounded-lg border border-[var(--border-ink)] px-2.5 py-0.5 text-xs font-bold ${accent.badge}`}
                             >
-                              <KindIcon className="h-3.5 w-3.5" aria-hidden="true" />
+                              <KindIcon
+                                className="h-3.5 w-3.5"
+                                aria-hidden="true"
+                              />
                               <span>{accent.label}</span>
                             </span>
                             <span className="font-mono-tech text-xs font-medium text-[var(--ink-muted)]">
@@ -158,7 +167,9 @@ export function ExperienceSection() {
                           <h3 className="mt-2.5 font-serif-display text-xl font-bold text-[var(--ink-primary)] sm:text-2xl">
                             {exp.role}
                           </h3>
-                          <p className={`text-sm font-semibold ${accent.orgText}`}>
+                          <p
+                            className={`text-sm font-semibold ${accent.orgText}`}
+                          >
                             {exp.organization}
                           </p>
                         </div>
@@ -214,10 +225,11 @@ export function ExperienceSection() {
                                 aria-hidden="true"
                               />
                               <h4 className="font-mono-tech text-xs font-bold tracking-wider text-[var(--ink-primary)] uppercase">
-                                SU App Product Thinking · Cohort &amp; Experiment Playbook
+                                SU App Product Thinking · Cohort &amp;
+                                Experiment Playbook
                               </h4>
                             </div>
-                            <span className="font-hand text-base text-[var(--accent-blue)]">
+                            <span className="font-hand text-base font-semibold text-[var(--accent-blue)]">
                               Click a cohort to inspect product loop
                             </span>
                           </div>
@@ -233,7 +245,7 @@ export function ExperienceSection() {
                                   aria-pressed={active}
                                   className={`rounded-xl border-2 px-3 py-1.5 text-xs font-bold ${
                                     active
-                                      ? "border-[var(--border-ink)] bg-[var(--accent-orange)] text-[#FFFDF9] shadow-[0_2px_0_var(--border-ink)]"
+                                      ? "border-[var(--border-ink)] bg-[var(--accent-orange-fill)] text-[#FFFDF9] shadow-[0_2px_0_var(--border-ink)]"
                                       : "border-[var(--border-soft)] bg-[var(--bg-surface)] text-[var(--ink-secondary)] hover:border-[var(--border-ink)] hover:text-[var(--ink-primary)]"
                                   }`}
                                 >
@@ -262,8 +274,11 @@ export function ExperienceSection() {
                             </div>
                             <div className="rounded-xl border border-[var(--border-soft)] bg-[var(--bg-surface)] p-3">
                               <p className="flex items-center gap-1 font-mono-tech text-[11px] font-bold text-[var(--accent-orange)] uppercase">
-                                <FlaskConical className="h-3 w-3" aria-hidden="true" />
-                                A/B Hypothesis
+                                <FlaskConical
+                                  className="h-3 w-3"
+                                  aria-hidden="true"
+                                />
+                                <span>A/B Hypothesis</span>
                               </p>
                               <p className="mt-1 text-xs leading-relaxed text-[var(--ink-primary)]">
                                 {selectedCohort.experimentHypothesis}

@@ -1,13 +1,79 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { Gamepad2 } from "lucide-react";
 import { SectionReveal } from "@/components/SectionReveal";
-import { HardTetrisGame } from "./HardTetrisGame";
+
+function TetrisLoadingShell() {
+  return (
+    <div className="ink-card flex min-h-[580px] flex-col items-center justify-center rounded-3xl bg-[var(--bg-paper)] p-6 text-center">
+      <p className="font-mono-tech text-xs font-bold tracking-wider text-[var(--accent-orange)] uppercase">
+        Interactive Playground
+      </p>
+      <p className="mt-2 font-serif-display text-2xl font-bold text-[var(--ink-primary)]">
+        Loading Hard Tetris Engine…
+      </p>
+    </div>
+  );
+}
+
+const LazyHardTetrisGame = dynamic(
+  () => import("./HardTetrisGame").then((mod) => mod.HardTetrisGame),
+  {
+    ssr: false,
+    loading: () => <TetrisLoadingShell />,
+  }
+);
 
 export function PlaygroundSection() {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [shouldLoadGame, setShouldLoadGame] = useState(false);
+
+  useEffect(() => {
+    if (shouldLoadGame) return;
+
+    const triggerLoad = () => setShouldLoadGame(true);
+
+    if (
+      typeof window !== "undefined" &&
+      (window.location.hash === "#playground" ||
+        typeof IntersectionObserver === "undefined")
+    ) {
+      const rafId = window.requestAnimationFrame(triggerLoad);
+      return () => window.cancelAnimationFrame(rafId);
+    }
+
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          triggerLoad();
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "450px 0px" }
+    );
+
+    const onHashChange = () => {
+      if (window.location.hash === "#playground") {
+        triggerLoad();
+      }
+    };
+
+    observer.observe(el);
+    window.addEventListener("hashchange", onHashChange);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("hashchange", onHashChange);
+    };
+  }, [shouldLoadGame]);
+
   return (
     <section
+      ref={sectionRef}
       id="playground"
       aria-labelledby="playground-heading"
       className="border-b-2 border-[var(--border-soft)] py-16 sm:py-24"
@@ -22,7 +88,7 @@ export function PlaygroundSection() {
               </p>
               <h2
                 id="playground-heading"
-                className="mt-1 font-serif-display text-3xl font-bold tracking-tight text-[var(--ink-primary)] sm:text-4xl"
+                className="text-balance mt-1 font-serif-display text-3xl font-bold tracking-tight text-[var(--ink-primary)] sm:text-4xl"
               >
                 Hard-mode Tetris, customized
               </h2>
@@ -34,7 +100,7 @@ export function PlaygroundSection() {
         </SectionReveal>
 
         <SectionReveal delay={0.08} className="mt-8">
-          <HardTetrisGame />
+          {shouldLoadGame ? <LazyHardTetrisGame /> : <TetrisLoadingShell />}
         </SectionReveal>
       </div>
     </section>

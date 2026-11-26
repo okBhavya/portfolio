@@ -200,4 +200,4 @@ export const profileConfig: ProfileConfig = {
 
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") ||
-  "https://bhavyagupta.dev";
+  "https://bhavya-gupta-portfolio-eta.vercel.app";

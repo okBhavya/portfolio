@@ -312,7 +312,7 @@ function computeRuleMultiplier(rules: GameRules): number {
 function MiniPiecePreview({ kind }: { kind: PieceKind | null }) {
   if (!kind) {
     return (
-      <div className="flex h-12 w-full items-center justify-center font-mono-tech text-[10px] text-[#7D899C]">
+      <div className="flex h-12 w-full items-center justify-center font-mono-tech text-[10px] text-[#9BA6B8]">
         EMPTY
       </div>
     );
@@ -324,6 +324,7 @@ function MiniPiecePreview({ kind }: { kind: PieceKind | null }) {
 
   return (
     <div
+      role="img"
       className="mx-auto grid gap-[2px]"
       style={{
         gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))`,
@@ -353,6 +354,7 @@ function MiniPiecePreview({ kind }: { kind: PieceKind | null }) {
 }
 
 export function HardTetrisGame() {
+  const cabinetRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const rafRef = useRef<number | null>(null);
@@ -1017,6 +1019,45 @@ export function HardTetrisGame() {
     togglePause,
   ]);
 
+  // Auto-pause active run when tab hides or cabinet scrolls mostly off-screen
+  useEffect(() => {
+    const pauseIfPlaying = (reason: string) => {
+      if (statusRef.current !== "playing") return;
+      statusRef.current = "paused";
+      setStatus("paused");
+      calloutRef.current = reason;
+      syncHud();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        pauseIfPlaying("Paused on tab switch");
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    let observer: IntersectionObserver | undefined;
+    const el = cabinetRef.current;
+    if (el && typeof IntersectionObserver !== "undefined") {
+      observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (entry && !entry.isIntersecting && entry.intersectionRatio < 0.1) {
+            pauseIfPlaying("Paused off-screen");
+          }
+        },
+        { threshold: [0, 0.1] }
+      );
+      observer.observe(el);
+    }
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      observer?.disconnect();
+    };
+  }, [syncHud]);
+
   // Main animation & gravity loop
   useEffect(() => {
     const drawBlock = (
@@ -1220,11 +1261,11 @@ export function HardTetrisGame() {
   const effectiveBest = Math.max(storedBest, hud.bestScore);
 
   return (
-    <div className="ink-card overflow-hidden rounded-3xl">
+    <div ref={cabinetRef} className="ink-card overflow-hidden rounded-3xl">
       {/* Arcade Header Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-[var(--border-ink)] bg-[var(--bg-beige)] px-4 py-3 sm:px-6">
         <div className="flex flex-wrap items-center gap-2.5">
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border-ink)] bg-[var(--accent-orange)] px-2.5 py-0.5 font-mono-tech text-[11px] font-bold text-[#FFFDF9]">
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border-ink)] bg-[var(--accent-orange-fill)] px-2.5 py-0.5 font-mono-tech text-[11px] font-bold text-[#FFFDF9]">
             <Flame className="h-3.5 w-3.5" aria-hidden="true" />
             <span>HARD TETRIS</span>
           </span>
@@ -1242,7 +1283,7 @@ export function HardTetrisGame() {
             onClick={() => setMuted((prev) => !prev)}
             aria-label={muted ? "Unmute sound effects" : "Mute sound effects"}
             aria-pressed={muted}
-            className="ink-button inline-flex items-center gap-1.5 rounded-xl bg-[var(--bg-surface)] px-3 py-1.5 text-xs font-bold text-[var(--ink-primary)]"
+            className="ink-button inline-flex min-h-[44px] touch-manipulation items-center gap-1.5 rounded-xl bg-[var(--bg-surface)] px-3.5 py-1.5 text-xs font-bold text-[var(--ink-primary)]"
           >
             {muted ? (
               <VolumeX
@@ -1262,7 +1303,7 @@ export function HardTetrisGame() {
             <button
               type="button"
               onClick={togglePause}
-              className="ink-button inline-flex items-center gap-1.5 rounded-xl bg-[var(--bg-surface)] px-3 py-1.5 text-xs font-bold text-[var(--ink-primary)]"
+              className="ink-button inline-flex min-h-[44px] touch-manipulation items-center gap-1.5 rounded-xl bg-[var(--bg-surface)] px-3.5 py-1.5 text-xs font-bold text-[var(--ink-primary)]"
             >
               {status === "paused" ? (
                 <>
@@ -1311,7 +1352,7 @@ export function HardTetrisGame() {
                 <button
                   type="button"
                   onClick={() => startGame()}
-                  className="ink-button mt-5 inline-flex items-center gap-2 rounded-xl bg-[var(--accent-orange)] px-5 py-2.5 text-sm font-bold text-[#FFFDF9]"
+                  className="ink-button mt-5 inline-flex min-h-[44px] touch-manipulation items-center gap-2 rounded-xl bg-[var(--accent-orange-fill)] px-5 py-2.5 text-sm font-bold text-[#FFFDF9]"
                 >
                   <Play className="h-4 w-4" aria-hidden="true" />
                   <span>Start Hard Tetris</span>
@@ -1331,7 +1372,7 @@ export function HardTetrisGame() {
                   <button
                     type="button"
                     onClick={togglePause}
-                    className="ink-button inline-flex items-center gap-1.5 rounded-xl bg-[var(--accent-green)] px-4 py-2 text-sm font-bold text-[#FFFDF9]"
+                    className="ink-button inline-flex min-h-[44px] touch-manipulation items-center gap-1.5 rounded-xl bg-[var(--accent-green)] px-4 py-2 text-sm font-bold text-[#FFFDF9]"
                   >
                     <Play className="h-4 w-4" aria-hidden="true" />
                     <span>Resume</span>
@@ -1339,7 +1380,7 @@ export function HardTetrisGame() {
                   <button
                     type="button"
                     onClick={() => startGame()}
-                    className="ink-button inline-flex items-center gap-1.5 rounded-xl bg-[var(--bg-surface)] px-4 py-2 text-sm font-bold text-[var(--ink-primary)]"
+                    className="ink-button inline-flex min-h-[44px] touch-manipulation items-center gap-1.5 rounded-xl bg-[var(--bg-surface)] px-4 py-2 text-sm font-bold text-[var(--ink-primary)]"
                   >
                     <RotateCcw className="h-4 w-4" aria-hidden="true" />
                     <span>Restart</span>
@@ -1361,7 +1402,7 @@ export function HardTetrisGame() {
                 </p>
                 <div className="mt-4 grid w-full grid-cols-3 gap-2 rounded-xl border border-[#2F3B4D] bg-[#1D2532] p-2.5 text-center">
                   <div>
-                    <div className="font-mono-tech text-[10px] text-[#8E9BAF]">
+                    <div className="font-mono-tech text-[10px] text-[#9BA6B8]">
                       SCORE
                     </div>
                     <div className="font-mono-tech text-sm font-bold text-[#F7F3EB]">
@@ -1369,7 +1410,7 @@ export function HardTetrisGame() {
                     </div>
                   </div>
                   <div>
-                    <div className="font-mono-tech text-[10px] text-[#8E9BAF]">
+                    <div className="font-mono-tech text-[10px] text-[#9BA6B8]">
                       LINES
                     </div>
                     <div className="font-mono-tech text-sm font-bold text-[#5AB896]">
@@ -1377,7 +1418,7 @@ export function HardTetrisGame() {
                     </div>
                   </div>
                   <div>
-                    <div className="font-mono-tech text-[10px] text-[#8E9BAF]">
+                    <div className="font-mono-tech text-[10px] text-[#9BA6B8]">
                       BEST
                     </div>
                     <div className="font-mono-tech text-sm font-bold text-[#E6B84E]">
@@ -1388,7 +1429,7 @@ export function HardTetrisGame() {
                 <button
                   type="button"
                   onClick={() => startGame()}
-                  className="ink-button mt-4 inline-flex items-center gap-2 rounded-xl bg-[var(--accent-orange)] px-5 py-2.5 text-sm font-bold text-[#FFFDF9]"
+                  className="ink-button mt-4 inline-flex min-h-[44px] touch-manipulation items-center gap-2 rounded-xl bg-[var(--accent-orange-fill)] px-5 py-2.5 text-sm font-bold text-[#FFFDF9]"
                 >
                   <RotateCcw className="h-4 w-4" aria-hidden="true" />
                   <span>Play Again</span>
@@ -1404,7 +1445,7 @@ export function HardTetrisGame() {
                 type="button"
                 onClick={() => moveHorizontal(-1)}
                 aria-label="Move piece left"
-                className="ink-button flex h-10 items-center justify-center rounded-xl bg-[var(--bg-surface)] text-[var(--ink-primary)]"
+                className="ink-button flex h-11 touch-manipulation select-none items-center justify-center rounded-xl bg-[var(--bg-surface)] text-[var(--ink-primary)]"
               >
                 <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -1412,7 +1453,7 @@ export function HardTetrisGame() {
                 type="button"
                 onClick={() => rotatePiece(-1)}
                 aria-label="Rotate counterclockwise"
-                className="ink-button flex h-10 items-center justify-center rounded-xl bg-[var(--bg-surface)] text-[var(--ink-primary)]"
+                className="ink-button flex h-11 touch-manipulation select-none items-center justify-center rounded-xl bg-[var(--bg-surface)] text-[var(--ink-primary)]"
               >
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -1420,7 +1461,7 @@ export function HardTetrisGame() {
                 type="button"
                 onClick={() => softDrop()}
                 aria-label="Soft drop"
-                className="ink-button flex h-10 items-center justify-center rounded-xl bg-[var(--bg-surface)] text-[var(--ink-primary)]"
+                className="ink-button flex h-11 touch-manipulation select-none items-center justify-center rounded-xl bg-[var(--bg-surface)] text-[var(--ink-primary)]"
               >
                 <ArrowDown className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -1428,7 +1469,7 @@ export function HardTetrisGame() {
                 type="button"
                 onClick={() => rotatePiece(1)}
                 aria-label="Rotate clockwise"
-                className="ink-button flex h-10 items-center justify-center rounded-xl bg-[var(--bg-surface)] text-[var(--ink-primary)]"
+                className="ink-button flex h-11 touch-manipulation select-none items-center justify-center rounded-xl bg-[var(--bg-surface)] text-[var(--ink-primary)]"
               >
                 <RotateCw className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -1436,7 +1477,7 @@ export function HardTetrisGame() {
                 type="button"
                 onClick={() => moveHorizontal(1)}
                 aria-label="Move piece right"
-                className="ink-button flex h-10 items-center justify-center rounded-xl bg-[var(--bg-surface)] text-[var(--ink-primary)]"
+                className="ink-button flex h-11 touch-manipulation select-none items-center justify-center rounded-xl bg-[var(--bg-surface)] text-[var(--ink-primary)]"
               >
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -1446,7 +1487,7 @@ export function HardTetrisGame() {
                 type="button"
                 onClick={() => holdCurrentPiece()}
                 disabled={!rules.holdEnabled}
-                className="ink-button flex h-10 items-center justify-center gap-1.5 rounded-xl bg-[var(--bg-beige)] px-3 text-xs font-bold text-[var(--ink-primary)] disabled:opacity-45"
+                className="ink-button flex h-11 touch-manipulation select-none items-center justify-center gap-1.5 rounded-xl bg-[var(--bg-beige)] px-3 text-xs font-bold text-[var(--ink-primary)] disabled:opacity-45"
               >
                 <Layers className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Hold (C)</span>
@@ -1454,7 +1495,7 @@ export function HardTetrisGame() {
               <button
                 type="button"
                 onClick={() => hardDrop()}
-                className="ink-button flex h-10 items-center justify-center gap-1.5 rounded-xl bg-[var(--accent-orange)] px-3 text-xs font-bold text-[#FFFDF9]"
+                className="ink-button flex h-11 touch-manipulation select-none items-center justify-center gap-1.5 rounded-xl bg-[var(--accent-orange-fill)] px-3 text-xs font-bold text-[#FFFDF9]"
               >
                 <span>Hard Drop (Space)</span>
               </button>
@@ -1474,7 +1515,7 @@ export function HardTetrisGame() {
                 <p className="mt-1 font-mono-tech text-2xl font-extrabold text-[var(--ink-primary)]">
                   {hud.score}
                 </p>
-                <p className="mt-0.5 truncate font-mono-tech text-[11px] font-semibold text-[var(--accent-orange)]">
+                <p className="mt-0.5 break-words font-mono-tech text-[11px] font-semibold leading-snug text-[var(--accent-orange)]">
                   {hud.lastCallout}
                 </p>
               </div>
@@ -1537,7 +1578,7 @@ export function HardTetrisGame() {
                   {rules.holdEnabled ? (
                     <MiniPiecePreview kind={hud.holdPiece} />
                   ) : (
-                    <span className="font-mono-tech text-[11px] text-[#6B7689]">
+                    <span className="font-mono-tech text-[11px] text-[#9BA6B8]">
                       LOCKED RULE
                     </span>
                   )}
@@ -1622,7 +1663,7 @@ export function HardTetrisGame() {
                       key={lv}
                       type="button"
                       onClick={() => updateCustomRule("startLevel", lv)}
-                      className={`flex-1 rounded-lg border px-1.5 py-1 font-mono-tech text-[11px] font-bold ${
+                      className={`min-h-[44px] flex-1 touch-manipulation rounded-lg border px-1.5 py-1 font-mono-tech text-[11px] font-bold ${
                         rules.startLevel === lv
                           ? "border-[var(--border-ink)] bg-[var(--ink-primary)] text-[var(--bg-surface)]"
                           : "border-[var(--border-soft)] bg-[var(--bg-paper)] text-[var(--ink-secondary)]"
@@ -1652,7 +1693,7 @@ export function HardTetrisGame() {
                       onClick={() =>
                         updateCustomRule("garbageIntervalSec", opt.val)
                       }
-                      className={`flex-1 rounded-lg border px-1.5 py-1 font-mono-tech text-[11px] font-bold ${
+                      className={`min-h-[44px] flex-1 touch-manipulation rounded-lg border px-1.5 py-1 font-mono-tech text-[11px] font-bold ${
                         rules.garbageIntervalSec === opt.val
                           ? "border-[var(--border-ink)] bg-[var(--ink-primary)] text-[var(--bg-surface)]"
                           : "border-[var(--border-soft)] bg-[var(--bg-paper)] text-[var(--ink-secondary)]"
@@ -1674,7 +1715,7 @@ export function HardTetrisGame() {
                     onClick={() =>
                       updateCustomRule("ghostEnabled", !rules.ghostEnabled)
                     }
-                    className={`flex-1 rounded-lg border px-1.5 py-1 font-mono-tech text-[10px] font-bold ${
+                    className={`min-h-[44px] flex-1 touch-manipulation rounded-lg border px-1.5 py-1 font-mono-tech text-[10px] font-bold ${
                       !rules.ghostEnabled
                         ? "border-[var(--border-ink)] bg-[var(--accent-blue)] text-[#FFFDF9]"
                         : "border-[var(--border-soft)] bg-[var(--bg-paper)] text-[var(--ink-secondary)]"
@@ -1687,7 +1728,7 @@ export function HardTetrisGame() {
                     onClick={() =>
                       updateCustomRule("holdEnabled", !rules.holdEnabled)
                     }
-                    className={`flex-1 rounded-lg border px-1.5 py-1 font-mono-tech text-[10px] font-bold ${
+                    className={`min-h-[44px] flex-1 touch-manipulation rounded-lg border px-1.5 py-1 font-mono-tech text-[10px] font-bold ${
                       !rules.holdEnabled
                         ? "border-[var(--border-ink)] bg-[var(--accent-blue)] text-[#FFFDF9]"
                         : "border-[var(--border-soft)] bg-[var(--bg-paper)] text-[var(--ink-secondary)]"
@@ -1711,9 +1752,9 @@ export function HardTetrisGame() {
                         !rules.pentominoesEnabled
                       )
                     }
-                    className={`w-full rounded-lg border px-2 py-1 font-mono-tech text-[11px] font-bold ${
+                    className={`min-h-[44px] w-full touch-manipulation rounded-lg border px-2 py-1 font-mono-tech text-[11px] font-bold ${
                       rules.pentominoesEnabled
-                        ? "border-[var(--border-ink)] bg-[var(--accent-orange)] text-[#FFFDF9]"
+                        ? "border-[var(--border-ink)] bg-[var(--accent-orange-fill)] text-[#FFFDF9]"
                         : "border-[var(--border-soft)] bg-[var(--bg-paper)] text-[var(--ink-secondary)]"
                     }`}
                   >

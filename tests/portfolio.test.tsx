@@ -45,14 +45,25 @@ describe("Bhavya Gupta Portfolio", () => {
     expect(
       screen.getByText(/Having plenty of sleep while evolving beyond endless expectations/i)
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Back to top" })).toBeInTheDocument();
+    // Back to top is hidden from assistive tech at y = 0 and revealed once scrolled past 420px
+    expect(
+      screen.queryByRole("button", { name: "Back to top" })
+    ).not.toBeInTheDocument();
+    Object.defineProperty(window, "scrollY", { value: 520, writable: true });
+    fireEvent.scroll(window);
+    expect(
+      screen.getByRole("button", { name: "Back to top" })
+    ).toBeInTheDocument();
+    Object.defineProperty(window, "scrollY", { value: 0, writable: true });
+    fireEvent.scroll(window);
+
     expect(screen.getByText(/Courses I've Learnt/i)).toBeInTheDocument();
     expect(screen.getByText("Human-Computer Interaction")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { level: 3, name: /How I Approach a Problem/i })
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /Step 03/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Step\s*03/i }));
     expect(
       screen.getByRole("heading", { level: 4, name: /3\. Prototype Modular Systems/i })
     ).toBeInTheDocument();
@@ -61,7 +72,7 @@ describe("Bhavya Gupta Portfolio", () => {
   it("toggles Day and Night desk lamp theme", () => {
     renderApp();
     const toggle = screen.getByRole("button", {
-      name: /switch to late-night study lamp mode/i,
+      name: /switch to late-night study lamp/i,
     });
     expect(toggle).toHaveAttribute("aria-pressed", "false");
 
@@ -69,7 +80,7 @@ describe("Bhavya Gupta Portfolio", () => {
     expect(document.documentElement.getAttribute("data-theme")).toBe("night");
     expect(
       screen.getByRole("button", {
-        name: /switch to warm daylight paper mode/i,
+        name: /switch to warm daylight paper/i,
       })
     ).toHaveAttribute("aria-pressed", "true");
   });
@@ -104,11 +115,14 @@ describe("Bhavya Gupta Portfolio", () => {
     });
     fireEvent.click(openBtn);
 
-    const dialog = screen.getByRole("dialog", {
+    const dialog = await screen.findByRole("dialog", {
       name: /tqe — distributed task queue engine/i,
     });
     expect(dialog).toBeInTheDocument();
     expect(within(dialog).getByText("30,149.5/min")).toBeInTheDocument();
+    expect(
+      within(dialog).getByRole("link", { name: /^full page$/i })
+    ).toHaveAttribute("href", "/projects/task-queue-engine");
 
     fireEvent.keyDown(window, { key: "Escape" });
     await waitFor(() => {
@@ -124,12 +138,12 @@ describe("Bhavya Gupta Portfolio", () => {
     renderApp();
 
     const globeProp = screen.getByRole("button", {
-      name: /desk globe — explore interests/i,
+      name: /desk globe & badminton racket/i,
     });
     fireEvent.click(globeProp);
 
     const globeDialog = screen.getByRole("dialog", {
-      name: /real-world problems & global curiosity/i,
+      name: /interests, impact & off-clock/i,
     });
     expect(globeDialog).toBeInTheDocument();
 
@@ -139,7 +153,7 @@ describe("Bhavya Gupta Portfolio", () => {
     await waitFor(() => {
       expect(
         screen.queryByRole("dialog", {
-          name: /real-world problems & global curiosity/i,
+          name: /interests, impact & off-clock/i,
         })
       ).not.toBeInTheDocument();
     });
@@ -178,10 +192,10 @@ describe("Bhavya Gupta Portfolio", () => {
     ).toBeInTheDocument();
   });
 
-  it("starts Hard Tetris, applies custom presets, and toggles mute safely", () => {
+  it("starts Hard Tetris, applies custom presets, and toggles mute safely", async () => {
     renderApp();
 
-    const blindBtn = screen.getByRole("button", { name: /^Blind Drop/i });
+    const blindBtn = await screen.findByRole("button", { name: /^Blind Drop/i });
     fireEvent.click(blindBtn);
     expect(screen.getByText(/1\.25x Score Multiplier/i)).toBeInTheDocument();
 
