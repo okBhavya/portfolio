@@ -5,11 +5,11 @@
   "description": "Interactive personal portfolio and engineering laboratory for Bhavya Gupta",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/sync-public-assets.mjs && next build",
     "start": "next start",
     "lint": "eslint src tests",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --pool=threads"
+    "test": "vitest run --pool=vmThreads"
   },
   "dependencies": {
     "lucide-react": "^1.80.0",
