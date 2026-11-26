@@ -33,11 +33,29 @@ describe("Bhavya Gupta Portfolio", () => {
     expect(screen.getByText(profileConfig.heroGreeting)).toBeInTheDocument();
     expect(screen.getAllByText(profileConfig.email).length).toBeGreaterThanOrEqual(1);
     expect(projects.filter((p) => p.featured)).toHaveLength(6);
+    expect(projects.find((p) => p.id === "flood-mapping")?.featured).toBe(true);
+    expect(projects.find((p) => p.id === "planpilot")?.featured).toBe(false);
     expect(experiences).toHaveLength(5);
     expect(screen.queryByText("Behavioural cohorts")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Areas I gravitate toward/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Not a corporate CV/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/No fake 90% skill bars/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/01 \/ What I Study/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Built with Next\.js/i)).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/Having plenty of sleep while evolving beyond endless expectations/i)
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Back to top" })).toBeInTheDocument();
     expect(screen.getByText(/Courses I've Learnt/i)).toBeInTheDocument();
     expect(screen.getByText("Human-Computer Interaction")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 3, name: /How I Approach a Problem/i })
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /Step 03/i }));
+    expect(
+      screen.getByRole("heading", { level: 4, name: /3\. Prototype Modular Systems/i })
+    ).toBeInTheDocument();
   });
 
   it("toggles Day and Night desk lamp theme", () => {
@@ -160,10 +178,34 @@ describe("Bhavya Gupta Portfolio", () => {
     ).toBeInTheDocument();
   });
 
-  it("starts Byte Runner game and toggles mute safely", () => {
+  it("starts Hard Tetris, applies custom presets, and toggles mute safely", () => {
     renderApp();
 
-    const startBtn = screen.getByRole("button", { name: /start run/i });
+    const blindBtn = screen.getByRole("button", { name: /^Blind Drop/i });
+    fireEvent.click(blindBtn);
+    expect(screen.getByText(/1\.25x Score Multiplier/i)).toBeInTheDocument();
+
+    const expSection = screen.getByRole("region", {
+      name: /where i've shipped, analysed & led/i,
+    });
+    const workBadges = within(expSection).getAllByText("Work");
+    expect(workBadges.length).toBe(2);
+    for (const badge of workBadges) {
+      expect(badge.parentElement).toHaveClass("bg-[var(--accent-green-soft)]");
+    }
+    const leadershipNodes = within(expSection).getAllByText("Leadership");
+    expect(
+      leadershipNodes.some((node) =>
+        node.parentElement?.classList.contains("bg-[var(--accent-orange-soft)]")
+      )
+    ).toBe(true);
+    const impactBadges = within(expSection).getAllByText("Impact");
+    expect(impactBadges.length).toBe(2);
+    for (const badge of impactBadges) {
+      expect(badge.parentElement).toHaveClass("bg-[var(--accent-blue-soft)]");
+    }
+
+    const startBtn = screen.getByRole("button", { name: /start hard tetris/i });
     fireEvent.click(startBtn);
 
     expect(screen.getByRole("button", { name: /pause/i })).toBeInTheDocument();

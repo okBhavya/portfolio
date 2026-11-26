@@ -16,28 +16,29 @@ import {
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { SectionReveal } from "@/components/SectionReveal";
 
-function getAccentClasses(accent: ExperienceItem["accent"]) {
-  switch (accent) {
-    case "terracotta":
+function getKindStyles(kind: ExperienceItem["kind"]) {
+  switch (kind) {
+    case "work":
       return {
-        badge: "bg-[var(--accent-orange-soft)] text-[var(--accent-orange)]",
-        dot: "bg-[var(--accent-orange)]",
-      };
-    case "forest":
-      return {
+        label: "Work",
         badge: "bg-[var(--accent-green-soft)] text-[var(--accent-green)]",
         dot: "bg-[var(--accent-green)]",
+        orgText: "text-[var(--accent-green)]",
       };
-    case "mustard":
+    case "leadership":
       return {
-        badge: "bg-[var(--accent-mustard-soft)] text-[var(--accent-mustard)]",
-        dot: "bg-[var(--accent-mustard)]",
+        label: "Leadership",
+        badge: "bg-[var(--accent-orange-soft)] text-[var(--accent-orange)]",
+        dot: "bg-[var(--accent-orange)]",
+        orgText: "text-[var(--accent-orange)]",
       };
-    case "slate":
+    case "impact":
     default:
       return {
+        label: "Impact",
         badge: "bg-[var(--accent-blue-soft)] text-[var(--accent-blue)]",
         dot: "bg-[var(--accent-blue)]",
+        orgText: "text-[var(--accent-blue)]",
       };
   }
 }
@@ -127,7 +128,7 @@ export function ExperienceSection() {
 
           <div className="space-y-8">
             {visibleExperiences.map((exp, idx) => {
-              const accent = getAccentClasses(exp.accent);
+              const accent = getKindStyles(exp.kind);
               const KindIcon = getKindIcon(exp.kind);
 
               return (
@@ -147,7 +148,7 @@ export function ExperienceSection() {
                               className={`inline-flex items-center gap-1.5 rounded-lg border border-[var(--border-ink)] px-2.5 py-0.5 text-xs font-bold ${accent.badge}`}
                             >
                               <KindIcon className="h-3.5 w-3.5" aria-hidden="true" />
-                              <span className="capitalize">{exp.kind}</span>
+                              <span>{accent.label}</span>
                             </span>
                             <span className="font-mono-tech text-xs font-medium text-[var(--ink-muted)]">
                               {exp.period} · {exp.location}
@@ -157,7 +158,7 @@ export function ExperienceSection() {
                           <h3 className="mt-2.5 font-serif-display text-xl font-bold text-[var(--ink-primary)] sm:text-2xl">
                             {exp.role}
                           </h3>
-                          <p className="text-sm font-semibold text-[var(--accent-orange)]">
+                          <p className={`text-sm font-semibold ${accent.orgText}`}>
                             {exp.organization}
                           </p>
                         </div>

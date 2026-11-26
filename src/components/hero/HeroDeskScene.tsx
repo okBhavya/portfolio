@@ -44,7 +44,7 @@ const DESK_PROPS: DeskPropMeta[] = [
     handNote: "Stuff I've built ↘",
     title: "Experiments & Flagship Projects",
     description:
-      "6 verified engineering builds spanning autonomous world models, distributed task queues, OR-Tools copilots, and 42M-event customer analytics.",
+      "6 flagship builds spanning autonomous world models, Sentinel SAR flood mapping, distributed task queues, continual RL, and 42M-event customer analytics.",
     actionLabel: "Open Projects Lab",
     targetSection: "projects",
     dayBox: { left: "6%", top: "3%", width: "32%", height: "47%" },
@@ -88,12 +88,12 @@ const DESK_PROPS: DeskPropMeta[] = [
   },
   {
     id: "mug",
-    label: "Chai Mug — Play Byte Runner Game",
-    handNote: "Play Byte Runner!",
-    title: "Chai Break · Byte Runner",
+    label: "Chai Mug — Play Hard Tetris",
+    handNote: "Play Hard Tetris!",
+    title: "Chai Break · Hard Tetris",
     description:
-      "Need a breather from reading case studies? Collect AI tokens and chai shields while dodging bugs in Byte Runner.",
-    actionLabel: "Play Byte Runner",
+      "Need a breather from reading case studies? Custom-configure gravity, blind ghost, rising garbage, or pentomino chaos in Hard Tetris.",
+    actionLabel: "Play Hard Tetris",
     targetSection: "playground",
     dayBox: { left: "34%", top: "58%", width: "8%", height: "20%" },
     nightBox: { left: "28%", top: "52%", width: "7%", height: "17%" },

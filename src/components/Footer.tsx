@@ -16,7 +16,7 @@ export function Footer() {
           <div>
             <SignatureSvg className="h-12 w-44 text-[var(--ink-primary)]" />
             <p className="mt-2 max-w-md text-xs leading-relaxed text-[var(--ink-secondary)]">
-              Hand-crafted on warm digital paper in Pilani. Zero templates, zero third-party trackers, plenty of chai.
+              Having plenty of sleep while evolving beyond endless expectations.
             </p>
           </div>
 
@@ -66,7 +66,7 @@ export function Footer() {
 
         <div className="mt-8 flex flex-col justify-between gap-2 border-t border-[var(--border-soft)] pt-5 font-mono-tech text-[11px] text-[var(--ink-muted)] sm:flex-row">
           <span>
-            &copy; {currentYear} {profileConfig.name}. Built with Next.js, TypeScript &amp; custom SVG craft.
+            &copy; {currentYear} {profileConfig.name}.
           </span>
           <span>BITS Pilani · B.E. CSE (2023–2027)</span>
         </div>

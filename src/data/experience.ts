@@ -79,7 +79,7 @@ export const experiences: ExperienceItem[] = [
     period: "July 2025 – July 2026",
     location: "Pilani, India",
     kind: "work",
-    accent: "terracotta",
+    accent: "forest",
     summary:
       "Owned data-driven product strategy and user analytics for the campus super-app powering student payments, dining, and campus services.",
     achievements: [
@@ -126,7 +126,7 @@ export const experiences: ExperienceItem[] = [
     period: "August 2025 – April 2026",
     location: "Pilani, India",
     kind: "leadership",
-    accent: "mustard",
+    accent: "terracotta",
     summary:
       "Directed alumni relations and fundraising operations for BOSM (BITS Open Sports Meet), blending outreach strategy with operational execution.",
     achievements: [
@@ -148,7 +148,7 @@ export const experiences: ExperienceItem[] = [
     period: "March 2025",
     location: "Sprint / MVP",
     kind: "impact",
-    accent: "forest",
+    accent: "slate",
     summary:
       "Validated a grassroots climate-resilience pain point and designed a working product concept under 48-hour startup sprint constraints.",
     achievements: [

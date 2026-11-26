@@ -43,9 +43,6 @@ export function SkillsSection({ onOpenProject }: SkillsSectionProps) {
                 Tools I actually ship with
               </h2>
             </div>
-            <p className="font-hand text-xl text-[var(--accent-blue)]">
-              No fake 90% skill bars — click any tool to see real proof.
-            </p>
           </div>
         </SectionReveal>
 

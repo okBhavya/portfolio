@@ -103,7 +103,7 @@ export default function OpenGraphImage() {
             color: "#4A514C",
           }}
         >
-          <span>World Models · PlanPilot · Distributed Task Queue · Customer Intelligence</span>
+          <span>World Models · Planet Sentinel · Task Queue Engine · Customer Intelligence</span>
           <span style={{ color: "#1F5E4B", fontWeight: 700 }}>github.com/okBhavya</span>
         </div>
       </div>
