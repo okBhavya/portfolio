@@ -89,7 +89,7 @@ function ProjectCard({
 
       {/* Visual Preview Thumbnail */}
       {isActive ? (
-        <div className="group relative h-44 w-full overflow-hidden border-b-2 border-[var(--border-soft)] bg-[#F5EFE2]">
+        <div className="group relative h-40 w-full shrink-0 overflow-hidden border-b-2 border-[var(--border-soft)] bg-[#FAF6EE]">
           {firstMedia ? (
             firstMedia.mediaKind === "video" &&
             firstMedia.videoMp4 &&
@@ -114,7 +114,12 @@ function ProjectCard({
                 width={firstMedia.width ?? 1200}
                 height={firstMedia.height ?? 720}
                 sizes="(max-width: 768px) 92vw, 440px"
-                className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.03]"
+                className={`h-full w-full ${
+                  firstMedia.mediaKind === "chart" ||
+                  firstMedia.mediaKind === "diagram"
+                    ? "object-contain p-1.5"
+                    : "object-cover object-center"
+                } transition-transform duration-300 group-hover:scale-[1.03]`}
               />
             )
           ) : (
@@ -122,7 +127,7 @@ function ProjectCard({
           )}
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute right-3 bottom-2.5 z-10 rounded-lg border border-[var(--border-ink)] bg-[var(--bg-surface)]/95 px-2.5 py-1 font-mono-tech text-[10px] font-bold text-[var(--ink-primary)] shadow-xs"
+            className="pointer-events-none absolute right-2.5 bottom-2 z-10 rounded-lg border border-[var(--border-ink)] bg-[var(--bg-surface)]/95 px-2 py-0.5 font-mono-tech text-[10px] font-bold text-[var(--ink-primary)] shadow-xs"
           >
             {getPreviewBadgeLabel(project)}
           </span>
@@ -134,7 +139,7 @@ function ProjectCard({
           />
         </div>
       ) : (
-        <div className="relative h-44 w-full overflow-hidden border-b-2 border-[var(--border-soft)] bg-[#F5EFE2]">
+        <div className="relative h-40 w-full shrink-0 overflow-hidden border-b-2 border-[var(--border-soft)] bg-[#FAF6EE]">
           {firstMedia ? (
             <Image
               src={firstMedia.posterSrc ?? firstMedia.src}
@@ -142,14 +147,19 @@ function ProjectCard({
               width={firstMedia.width ?? 1200}
               height={firstMedia.height ?? 720}
               sizes="360px"
-              className="h-full w-full object-cover object-center"
+              className={`h-full w-full ${
+                firstMedia.mediaKind === "chart" ||
+                firstMedia.mediaKind === "diagram"
+                  ? "object-contain p-1.5"
+                  : "object-cover object-center"
+              }`}
             />
           ) : (
             <ProjectSketchVisual sketchType={project.sketchType} />
           )}
           <span
             aria-hidden="true"
-            className="absolute right-3 bottom-2.5 rounded-lg border border-[var(--border-ink)] bg-[var(--bg-surface)]/95 px-2.5 py-1 font-mono-tech text-[10px] font-bold text-[var(--ink-primary)] shadow-xs"
+            className="absolute right-2.5 bottom-2 rounded-lg border border-[var(--border-ink)] bg-[var(--bg-surface)]/95 px-2 py-0.5 font-mono-tech text-[10px] font-bold text-[var(--ink-primary)] shadow-xs"
           >
             {getPreviewBadgeLabel(project)}
           </span>
@@ -157,25 +167,25 @@ function ProjectCard({
       )}
 
       {/* Card Body */}
-      <div className="flex flex-1 flex-col justify-between p-5">
+      <div className="flex min-h-0 flex-1 flex-col justify-between p-4">
         <div>
-          <h3 className="font-serif-display text-xl font-bold leading-snug text-[var(--ink-primary)]">
+          <h3 className="font-serif-display text-lg font-bold leading-snug text-[var(--ink-primary)] sm:text-xl">
             {project.shortTitle}
           </h3>
-          <p className="mt-2 text-sm leading-relaxed text-[var(--ink-secondary)]">
+          <p className="mt-1.5 line-clamp-3 text-[13px] leading-relaxed text-[var(--ink-secondary)]">
             {project.tagline}
           </p>
 
-          <div className="mt-4 grid grid-cols-2 items-stretch gap-2">
+          <div className="mt-3 grid grid-cols-2 items-stretch gap-2">
             {project.metrics.slice(0, 2).map((m) => (
               <div
                 key={m.label}
                 className="flex flex-col justify-between rounded-xl border border-[var(--border-soft)] bg-[var(--bg-paper)] px-2.5 py-2"
               >
-                <div className="font-mono-tech text-sm font-extrabold leading-tight text-[var(--ink-primary)]">
+                <div className="font-mono-tech text-xs font-extrabold leading-tight text-[var(--ink-primary)] sm:text-[13px]">
                   {renderFormattedStatValue(m.value)}
                 </div>
-                <div className="mt-1 text-[11px] font-medium leading-tight text-[var(--ink-muted)]">
+                <div className="mt-1 text-[10.5px] font-medium leading-tight text-[var(--ink-muted)]">
                   {m.label}
                 </div>
               </div>
@@ -183,20 +193,25 @@ function ProjectCard({
           </div>
         </div>
 
-        <div className="mt-5">
-          <div className="flex flex-wrap gap-1.5">
-            {project.technologies.slice(0, 4).map((tech) => (
+        <div className="mt-3">
+          <div className="flex flex-nowrap items-center gap-1.5 overflow-hidden">
+            {project.technologies.slice(0, 3).map((tech) => (
               <span
                 key={tech}
-                className="rounded-md bg-[var(--bg-beige)] px-2 py-0.5 font-mono-tech text-[10.5px] font-medium text-[var(--ink-secondary)]"
+                className="shrink-0 whitespace-nowrap rounded-md bg-[var(--bg-beige)] px-2 py-0.5 font-mono-tech text-[10.5px] font-medium text-[var(--ink-secondary)]"
               >
                 {tech}
               </span>
             ))}
+            {project.technologies.length > 3 && (
+              <span className="shrink-0 whitespace-nowrap rounded-md border border-[var(--border-soft)] px-1.5 py-0.5 font-mono-tech text-[10px] font-semibold text-[var(--ink-muted)]">
+                +{project.technologies.length - 3}
+              </span>
+            )}
           </div>
 
           {isActive ? (
-            <div className="mt-4 flex items-center justify-between gap-2 border-t border-[var(--border-soft)] pt-3.5">
+            <div className="mt-3 flex items-center justify-between gap-2 border-t border-[var(--border-soft)] pt-3">
               <button
                 type="button"
                 onClick={() => onOpenProject(project)}
@@ -206,7 +221,7 @@ function ProjectCard({
                 <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </button>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <Link
                   href={`/projects/${project.slug}`}
                   aria-label={`Page — shareable link to ${project.shortTitle} case study`}
@@ -227,7 +242,7 @@ function ProjectCard({
               </div>
             </div>
           ) : (
-            <div className="mt-4 flex items-center justify-center border-t border-[var(--border-soft)] pt-3">
+            <div className="mt-3 flex items-center justify-center border-t border-[var(--border-soft)] pt-3">
               <button
                 type="button"
                 tabIndex={-1}
@@ -236,7 +251,7 @@ function ProjectCard({
                   onSelectCard?.();
                 }}
                 aria-label={`Bring to center — ${project.shortTitle}`}
-                className="font-mono-tech text-xs font-bold text-[var(--accent-orange)] hover:underline"
+                className="inline-flex h-[28px] items-center font-mono-tech text-xs font-bold text-[var(--accent-orange)] hover:underline"
               >
                 Bring to center ↻
               </button>
@@ -371,27 +386,27 @@ export function ProjectsSection({
 
         {/* React Bits 3D Circular Orbit Carousel Stage */}
         {count > 0 && (
-          <div className="mt-8">
-            <div className="relative h-[625px] w-full sm:h-[650px]">
+          <div className="mt-6">
+            <div className="relative h-[500px] w-full sm:h-[595px]">
               <CircularCarousel
                 key={activeCategory}
                 carouselRef={carouselRef}
                 items={carouselItems}
                 preset="orbit"
                 intro="rise"
-                cardWidth={365}
-                aspectRatio={0.69}
-                gap={24}
+                cardWidth={352}
+                aspectRatio={0.7}
+                gap={28}
                 curve={0}
-                tilt={-8}
-                perspective={1850}
+                tilt={-6}
+                perspective={2050}
                 autoplay="off"
                 momentum={0.62}
                 snap
                 draggable
                 focusOnClick
-                parallax={0.28}
-                depthFade={theme === "night" ? 0.48 : 0.32}
+                parallax={0.24}
+                depthFade={theme === "night" ? 0.38 : 0.22}
                 fadeColor={theme === "night" ? "#111722" : "#F7F3EB"}
                 cornerRadius={24}
                 captions
@@ -413,7 +428,7 @@ export function ProjectsSection({
 
             {/* Orbital Project Selector Strip */}
             {count > 1 && (
-              <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+              <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
                 {visibleProjects.map((proj, idx) => {
                   const selected = idx === safeIndex;
                   return (
@@ -426,12 +441,12 @@ export function ProjectsSection({
                       className={`inline-flex items-center gap-1.5 rounded-full border-2 px-3 py-1.5 font-mono-tech text-[11px] font-bold transition-all ${
                         selected
                           ? "border-[var(--border-ink)] bg-[var(--ink-primary)] text-[var(--bg-paper)] shadow-[0_2px_0_var(--accent-orange)]"
-                          : "border-[var(--border-soft)] bg-[var(--bg-surface)] text-[var(--ink-secondary)] hover:border-[var(--border-ink)]"
+                          : "border-[var(--border-soft)] bg-[var(--bg-surface)] text-[var(--ink-secondary)] hover:border-[var(--border-ink)] hover:text-[var(--ink-primary)]"
                       }`}
                     >
                       <span
                         aria-hidden="true"
-                        className={`h-2 w-2 rounded-full ${
+                        className={`h-2 w-2 rounded-full transition-colors ${
                           selected
                             ? "bg-[var(--accent-orange)]"
                             : "bg-[var(--border-soft)]"

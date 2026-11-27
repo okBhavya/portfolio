@@ -33,7 +33,8 @@ describe("Bhavya Gupta Portfolio", () => {
     expect(screen.getByText(profileConfig.heroGreeting)).toBeInTheDocument();
     expect(screen.getAllByText(profileConfig.email).length).toBeGreaterThanOrEqual(1);
     expect(projects.filter((p) => p.featured)).toHaveLength(5);
-    expect(projects.find((p) => p.id === "flood-mapping")?.featured).toBe(true);
+    expect(projects.find((p) => p.slug === "flood-prediction")?.featured).toBe(true);
+    expect(projects.find((p) => p.slug === "planet-sentinel")).toBeUndefined();
     expect(projects.find((p) => p.id === "planpilot")).toBeUndefined();
     expect(projects.find((p) => p.id === "internship-hunter")).toBeUndefined();
     expect(projects.find((p) => p.id === "distributed-task-queue")).toBeUndefined();
@@ -123,13 +124,13 @@ describe("Bhavya Gupta Portfolio", () => {
 
     await waitFor(() => {
       expect(
-        within(projectsSection).getByText("Planet Sentinel, 1 of 2")
+        within(projectsSection).getByText("Flood Prediction, 1 of 2")
       ).toBeInTheDocument();
     });
     expect(
       within(projectsSection).getByRole("heading", {
         level: 3,
-        name: "Planet Sentinel",
+        name: "Flood Prediction",
       })
     ).toBeInTheDocument();
     expect(

@@ -120,7 +120,7 @@ export function ProjectSketchVisual({
           <rect x="168" y="20" width="124" height="90" rx="8" fill="var(--accent-blue-soft)" stroke="var(--border-ink)" strokeWidth="2" />
           <path d="M182 86 Q210 42, 248 60 T282 38" fill="none" stroke="var(--accent-blue)" strokeWidth="12" strokeLinecap="round" />
           <text x="230" y="102" textAnchor="middle" fontSize="8.5" fontWeight="700" fontFamily="monospace" fill="var(--ink-primary)">
-            IoU 0.71 · 3,656 km²
+            IoU 0.91 · 4,531 patches
           </text>
         </svg>
       );

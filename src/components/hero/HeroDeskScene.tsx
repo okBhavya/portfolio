@@ -46,7 +46,7 @@ const DESK_PROPS: DeskPropMeta[] = [
     handNote: "Stuff I've built ↘",
     title: "Experiments & Flagship Projects",
     description:
-      "5 flagship builds spanning autonomous world models, Sentinel SAR flood mapping, continual RL, 42.4M-event customer analytics, and CalibrAI.",
+      "5 flagship builds spanning autonomous world models, Sentinel-1 Attention U-Net flood prediction, continual RL, 42.4M-event customer analytics, and CalibrAI.",
     actionLabel: "Open Projects Lab",
     targetSection: "projects",
     day: {
@@ -442,7 +442,7 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
           alt="Hand-drawn night-mode illustration of Bhavya Gupta wearing a black t-shirt sleeping at his desk beside his closed silver Lenovo laptop with a GNU sticker, glowing mini Nintendo Tetris console, stacked books, starry BITS Pilani Clock Tower window, headphones, globe, and badminton racket"
           className="hero-img-night block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
         />
-        {/* Night reading Owl sprite arriving atop the 3 stacked books cleanly at 2s */}
+        {/* Night reading Owl sprite perched cleanly atop the 3 stacked books */}
         <Image
           src="/hero/owl-reading-v7.png"
           width={159}
@@ -526,87 +526,9 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
             </g>
           </g>
 
-          {/* Subtle breathing golden lamp glow over the owl's open book + 2s wing-flapping flight onto 3 stacked books */}
+          {/* Subtle breathing golden lamp glow over the owl's open book */}
           <g className="hero-sky-night pointer-events-none">
-            <circle cx="235" cy="482" r="44" fill="url(#heroOwlBookGlow)" className="owl-book-glow hero-owl-perched-glow" />
-            {isNight && (
-              <g className="hero-owl-flight">
-                {/* Outstretched flapping slate-grey left & right wings */}
-                <g className="owl-wing-left">
-                  <path
-                    d="M-12 -6 C-46 -26 -64 -10 -52 12 C-38 22 -18 14 -10 8 Z"
-                    fill="#5F6575"
-                    stroke="#171214"
-                    strokeWidth="2.8"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M-24 -2 C-42 -8 -48 2 -40 10"
-                    fill="none"
-                    stroke="#171214"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                  />
-                </g>
-                <g className="owl-wing-right">
-                  <path
-                    d="M12 -6 C46 -26 64 -10 52 12 C38 22 18 14 10 8 Z"
-                    fill="#5F6575"
-                    stroke="#171214"
-                    strokeWidth="2.8"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M24 -2 C42 -8 48 2 40 10"
-                    fill="none"
-                    stroke="#171214"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                  />
-                </g>
-                {/* Tail feathers */}
-                <path
-                  d="M-12 22 L-18 42 L0 36 L14 42 L10 22 Z"
-                  fill="#4E5360"
-                  stroke="#171214"
-                  strokeWidth="2.4"
-                  strokeLinejoin="round"
-                />
-                {/* Owl body */}
-                <ellipse
-                  cx="0"
-                  cy="6"
-                  rx="24"
-                  ry="27"
-                  fill="#7D624C"
-                  stroke="#171214"
-                  strokeWidth="2.8"
-                />
-                {/* Owl head & ear tufts */}
-                <path
-                  d="M-24 -18 Q-28 -36 -38 -40 Q-16 -36 -6 -29 Q0 -31 6 -29 Q18 -36 36 -40 Q26 -32 24 -18 Q24 4 0 4 Q-24 4 -24 -18 Z"
-                  fill="#666973"
-                  stroke="#171214"
-                  strokeWidth="2.6"
-                  strokeLinejoin="round"
-                />
-                {/* Warm cream facial discs */}
-                <ellipse cx="-10" cy="-12" rx="11" ry="11" fill="#EAD0AE" stroke="#171214" strokeWidth="2.2" />
-                <ellipse cx="10" cy="-12" rx="11" ry="11" fill="#EAD0AE" stroke="#171214" strokeWidth="2.2" />
-                {/* Big golden amber eyes + catchlights */}
-                <circle cx="-10" cy="-12" r="5.5" fill="#E39D43" stroke="#171214" strokeWidth="1.8" />
-                <circle cx="10" cy="-12" r="5.5" fill="#E39D43" stroke="#171214" strokeWidth="1.8" />
-                <circle cx="-10" cy="-12" r="3" fill="#2A1710" />
-                <circle cx="10" cy="-12" r="3" fill="#2A1710" />
-                <circle cx="-8.5" cy="-13.5" r="1.4" fill="#FFFDF9" />
-                <circle cx="11.5" cy="-13.5" r="1.4" fill="#FFFDF9" />
-                {/* Beak */}
-                <path d="M-3.5 -9 L3.5 -9 L0 -1 Z" fill="#D88835" stroke="#171214" strokeWidth="1.8" strokeLinejoin="round" />
-                {/* Small closed blue book carried in talons to the 3 stacked books */}
-                <path d="M-14 22 L12 18 L16 32 L-10 36 Z" fill="#7CA0B2" stroke="#171214" strokeWidth="2.2" strokeLinejoin="round" />
-                <path d="M-11 26 L13 22" stroke="#FFF8E6" strokeWidth="2" />
-              </g>
-            )}
+            <circle cx="235" cy="482" r="44" fill="url(#heroOwlBookGlow)" className="owl-book-glow" />
           </g>
 
           {DESK_PROPS.map((prop) => {

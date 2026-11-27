@@ -61,6 +61,8 @@ export function ProjectMediaGallery({ project }: { project: ProjectItem }) {
             alt={activeMedia.alt}
             width={activeMedia.width ?? 1200}
             height={activeMedia.height ?? 720}
+            loading="eager"
+            decoding="sync"
             sizes="(max-width: 900px) 92vw, 820px"
             className="mx-auto max-h-[340px] w-auto object-contain"
           />

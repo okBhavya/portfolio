@@ -9,7 +9,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import "./CircularCarousel.css";
 
@@ -56,10 +56,10 @@ const PRESETS: Record<CarouselPreset, PresetConfig> = {
   },
   orbit: {
     axis: "y",
-    tilt: -8,
-    perspective: 1800,
+    tilt: -6,
+    perspective: 2050,
     curve: 0,
-    spread: 1.2,
+    spread: 1.14,
     inward: false,
     billboard: true,
     backfaces: false,
@@ -99,7 +99,7 @@ const INTRO_LENGTH: Record<CarouselIntro, number> = {
 const DRAG_THRESHOLD = 5;
 const SPRING = 118;
 const SETTLE_SPEED = 9;
-const CAPTION_SPACE = 76;
+const CAPTION_SPACE = 70;
 const TO_RAD = Math.PI / 180;
 
 const clamp = (value: number, min: number, max: number) =>
@@ -304,6 +304,7 @@ export function CircularCarousel<T extends CarouselItem>({
     stretch: reduced ? 0 : clamp(stretch, 0, 1),
     depthFade: clamp(depthFade, 0, 1),
     captions,
+    showArrows,
     reduced,
   };
   const settingsRef = useRef(settings);
@@ -341,7 +342,8 @@ export function CircularCarousel<T extends CarouselItem>({
       const rect = root.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
       const room = s.captions ? CAPTION_SPACE : 0;
-      const width = rect.width * 0.92;
+      const arrowGutter = s.showArrows && s.count > 1 && rect.width >= 640 ? 136 : 20;
+      const width = Math.max(220, (rect.width - arrowGutter) * 0.94);
       const height = (rect.height - room) * 0.92;
       const P = s.perspective || 1800;
       let minX = Infinity;
@@ -361,7 +363,14 @@ export function CircularCarousel<T extends CarouselItem>({
           [-s.cardW / 2, s.cardH / 2],
           [s.cardW / 2, s.cardH / 2],
         ];
-        const limit = s.layout.window ? s.layout.window * s.step : 180;
+        const limit =
+          rect.width < 640
+            ? 12
+            : rect.width < 920
+              ? Math.min(54, s.step * 0.85)
+              : s.layout.window
+                ? s.layout.window * s.step
+                : 180;
         for (let a = -limit; a <= limit; a += Math.max(limit / 20, 5)) {
           for (const [cx, cy] of corners) {
             let p: [number, number, number];
@@ -954,6 +963,7 @@ export function CircularCarousel<T extends CarouselItem>({
                     }}
                     className="circular-carousel__card"
                     data-cc-index={index}
+                    data-active={isActiveCard ? "true" : undefined}
                     role="group"
                     aria-roledescription="slide"
                     aria-hidden={isActiveCard ? undefined : true}
@@ -965,7 +975,7 @@ export function CircularCarousel<T extends CarouselItem>({
                       }`}
                       style={{
                         width: `${cardW}px`,
-                        minHeight: `${cardH}px`,
+                        height: `${cardH}px`,
                         borderRadius: "var(--cc-radius)",
                       }}
                     >
@@ -993,17 +1003,19 @@ export function CircularCarousel<T extends CarouselItem>({
             type="button"
             onClick={() => stepBy(-1)}
             aria-label="Previous project"
-            className="circular-carousel__nav circular-carousel__nav--prev ink-button inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--bg-surface)]/95 text-[var(--ink-primary)] shadow-md backdrop-blur-xs"
+            title="Previous project (←)"
+            className="circular-carousel__nav circular-carousel__nav--prev"
           >
-            <ArrowLeft className="h-5 w-5" aria-hidden="true" />
+            <ChevronLeft className="h-5 w-5" strokeWidth={2.4} aria-hidden="true" />
           </button>
           <button
             type="button"
             onClick={() => stepBy(1)}
             aria-label="Next project"
-            className="circular-carousel__nav circular-carousel__nav--next ink-button inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--bg-surface)]/95 text-[var(--ink-primary)] shadow-md backdrop-blur-xs"
+            title="Next project (→)"
+            className="circular-carousel__nav circular-carousel__nav--next"
           >
-            <ArrowRight className="h-5 w-5" aria-hidden="true" />
+            <ChevronRight className="h-5 w-5" strokeWidth={2.4} aria-hidden="true" />
           </button>
         </>
       )}

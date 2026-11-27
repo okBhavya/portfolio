@@ -65,7 +65,7 @@ export const skillCategories: SkillCategory[] = [
     skills: [
       {
         name: "PyTorch",
-        detail: "Neural dynamics world models, continual RL policies, and ResNet U-Nets.",
+        detail: "Neural dynamics world models, continual RL policies, and Attention U-Nets.",
         usedInProjects: ["world-models-mpc", "continual-learning", "flood-mapping"],
         usedInExperience: [],
       },
@@ -82,8 +82,8 @@ export const skillCategories: SkillCategory[] = [
         usedInExperience: [],
       },
       {
-        name: "Rasterio & SNAP (gpt)",
-        detail: "Sentinel-1/2 dual-polarization SAR preprocessing and geospatial tiling.",
+        name: "SNAP 14.0 & Rasterio",
+        detail: "Sentinel-1 GRD SAR calibration, terrain correction & multi-temporal 64×64 tiling.",
         usedInProjects: ["flood-mapping"],
         usedInExperience: ["climatetech"],
       },

@@ -205,13 +205,18 @@ html:not([data-theme="night"]) .hero-img-night {
 .hero-owl-perched {
   position: absolute;
   z-index: 10;
+  transition: opacity 180ms ease-out;
+}
+
+html:not([data-theme="night"]) .hero-owl-perched {
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
 }
 
 html[data-theme="night"] .hero-owl-perched {
+  opacity: 1;
   visibility: visible;
-  animation: owlReaderArrive 2000ms ease-out forwards;
 }
 
 .hero-stage {
@@ -471,75 +476,6 @@ html[data-theme="night"] .hero-owl-perched {
   animation: windowStarTwinkle 4.4s ease-in-out -1.8s infinite;
 }
 
-@keyframes owlFlyToBooks {
-  0% {
-    transform: translate3d(392px, 540px, 0) scale(0.95) rotate(-6deg);
-    opacity: 0;
-  }
-  5% {
-    transform: translate3d(390px, 526px, 0) scale(1) rotate(-8deg);
-    opacity: 1;
-  }
-  28% {
-    transform: translate3d(340px, 418px, 0) scale(1.03) rotate(-12deg);
-    opacity: 1;
-  }
-  54% {
-    transform: translate3d(268px, 388px, 0) scale(1.02) rotate(-5deg);
-    opacity: 1;
-  }
-  76% {
-    transform: translate3d(214px, 438px, 0) scale(0.98) rotate(3deg);
-    opacity: 1;
-  }
-  84% {
-    transform: translate3d(206px, 474px, 0) scale(0.95) rotate(0deg);
-    opacity: 1;
-  }
-  94% {
-    transform: translate3d(206px, 478px, 0) scale(0.95) rotate(0deg);
-    opacity: 0;
-  }
-  100% {
-    transform: translate3d(206px, 478px, 0) scale(0.95) rotate(0deg);
-    opacity: 0;
-  }
-}
-
-@keyframes owlWingFlapL {
-  0% {
-    transform: rotate(-18deg) scaleY(0.88);
-  }
-  100% {
-    transform: rotate(28deg) scaleY(1.08);
-  }
-}
-
-@keyframes owlWingFlapR {
-  0% {
-    transform: rotate(18deg) scaleY(0.88);
-  }
-  100% {
-    transform: rotate(-28deg) scaleY(1.08);
-  }
-}
-
-@keyframes owlReaderArrive {
-  0%,
-  80% {
-    opacity: 0;
-    transform: translate3d(0, -6px, 0) scale(0.96);
-  }
-  92% {
-    opacity: 1;
-    transform: translate3d(0, -2px, 0) scale(1);
-  }
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-}
-
 @keyframes teaSteamRise {
   0%,
   100% {
@@ -552,29 +488,10 @@ html[data-theme="night"] .hero-owl-perched {
   }
 }
 
-.hero-owl-flight {
-  animation: owlFlyToBooks 2000ms cubic-bezier(0.22, 0.72, 0.28, 1) forwards;
-  will-change: transform, opacity;
-}
-
-.owl-wing-left {
-  transform-box: fill-box;
-  transform-origin: right center;
-  animation: owlWingFlapL 210ms ease-in-out 9 alternate;
-}
-
-.owl-wing-right {
-  transform-box: fill-box;
-  transform-origin: left center;
-  animation: owlWingFlapR 210ms ease-in-out 9 alternate;
-}
-
 .owl-book-glow {
   transform-box: fill-box;
   transform-origin: center;
-  animation:
-    owlReaderArrive 2000ms ease-out forwards,
-    owlBookGlowPulse 3.4s ease-in-out 2000ms infinite;
+  animation: owlBookGlowPulse 3.4s ease-in-out infinite;
 }
 
 .tea-steam-a {
@@ -596,13 +513,6 @@ html[data-theme="night"] .hero-owl-perched {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-  html[data-theme="night"] .hero-owl-perched {
-    opacity: 1;
-    transform: none;
-  }
-  .hero-owl-flight {
-    display: none;
   }
   *,
   *::before,

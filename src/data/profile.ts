@@ -166,7 +166,7 @@ export const profileConfig: ProfileConfig = {
       checkQuestion:
         "Which mechanism actually moves the metric when everything else is held constant?",
       proofExample:
-        "Dual-pol VV+VH SAR (+0.08 flood IoU), Orthogonal Projection vs. Parseval regularization, and explicit MPC safety constraints.",
+        "Multi-temporal 4-band Sentinel-1 SAR & Attention U-Net (0.9101 test IoU), Orthogonal Projection vs. Parseval regularization, and explicit MPC safety constraints.",
       accent: "green",
     },
     {
