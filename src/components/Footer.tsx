@@ -66,11 +66,99 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col justify-between gap-2 border-t border-[var(--border-soft)] pt-5 font-mono-tech text-[11px] text-[var(--ink-muted)] sm:flex-row">
+        <div className="mt-8 flex items-center justify-between gap-4 border-t border-[var(--border-soft)] pt-5 pr-12 font-mono-tech text-[11px] text-[var(--ink-muted)] sm:pr-0">
           <span>
             &copy; {currentYear} {profileConfig.name}.
           </span>
-          <span>BITS Pilani · B.E. CSE (2023–2027)</span>
+
+          {/* Hand-drawn warm teacup illustration */}
+          <svg
+            viewBox="0 0 88 54"
+            role="img"
+            aria-label="Cup of warm tea illustration"
+            className="h-11 w-[72px] shrink-0 overflow-visible text-[var(--border-ink)]"
+          >
+            {/* Gently curling warm tea steam */}
+            <path
+              d="M32 16c-3-4 2-8-1-12"
+              fill="none"
+              stroke="var(--ink-muted)"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              className="tea-steam-a"
+            />
+            <path
+              d="M42 15c-3-5 2-9-1-13"
+              fill="none"
+              stroke="var(--accent-orange)"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              className="tea-steam-b"
+            />
+            <path
+              d="M52 16c-2-4 2-7-1-11"
+              fill="none"
+              stroke="var(--ink-muted)"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+              className="tea-steam-a"
+            />
+
+            {/* Saucer */}
+            <ellipse
+              cx="42"
+              cy="46"
+              rx="29"
+              ry="5.5"
+              fill="var(--bg-beige)"
+              stroke="currentColor"
+              strokeWidth="2.1"
+            />
+            {/* Cup handle */}
+            <path
+              d="M59 24c7 0 11 4 11 9.5c0 5-4 8.5-11 8.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+            />
+            {/* Terracotta ceramic mug body */}
+            <path
+              d="M22 22h40v12c0 7.5-7.5 12-20 12S22 41.5 22 34z"
+              fill="var(--accent-orange-fill)"
+              stroke="currentColor"
+              strokeWidth="2.1"
+              strokeLinejoin="round"
+            />
+            {/* Tea liquid surface */}
+            <ellipse
+              cx="42"
+              cy="22"
+              rx="20"
+              ry="4.8"
+              fill="#C78A52"
+              stroke="currentColor"
+              strokeWidth="2"
+            />
+            {/* Hanging teabag string & tag */}
+            <path
+              d="M30 23c-1 4-2 8-2 12"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+            <rect
+              x="25"
+              y="34"
+              width="6"
+              height="6"
+              rx="1.2"
+              fill="var(--bg-surface)"
+              stroke="currentColor"
+              strokeWidth="1.4"
+            />
+          </svg>
         </div>
       </div>
     </footer>

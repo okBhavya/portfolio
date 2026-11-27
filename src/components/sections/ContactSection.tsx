@@ -54,23 +54,13 @@ export function buildMailtoHref(
   return `mailto:${email}?${params.toString()}`;
 }
 
-interface PreparedDraft {
-  gmailHref: string;
-  mailtoHref: string;
-  plainCopy: string;
-}
-
 export function ContactSection() {
   const [copied, setCopied] = useState(false);
-  const [copiedDraft, setCopiedDraft] = useState(false);
   const [senderName, setSenderName] = useState("");
   const [senderEmail, setSenderEmail] = useState("");
   const [topic, setTopic] = useState("Collaboration / Project Idea");
   const [message, setMessage] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
-  const [preparedDraft, setPreparedDraft] = useState<PreparedDraft | null>(
-    null
-  );
 
   const directGmailHref = buildGmailComposeHref(
     profileConfig.email,
@@ -98,7 +88,6 @@ export function ContactSection() {
       setValidationError(
         "Write a short note (at least 4 characters) before sending."
       );
-      setPreparedDraft(null);
       return;
     }
 
@@ -114,28 +103,9 @@ export function ContactSection() {
       fullSubject,
       fullBody
     );
-    const mailtoHref = buildMailtoHref(
-      profileConfig.email,
-      fullSubject,
-      fullBody
-    );
-    const plainCopy = `To: ${profileConfig.email}\nSubject: ${fullSubject}\n\n${fullBody}`;
 
-    setPreparedDraft({ gmailHref, mailtoHref, plainCopy });
-
-    // Synchronously launch Gmail Web Compose inside the user click handler (never silently fails without OS mail app)
+    // Synchronously launch Gmail Web Compose inside the user click handler
     window.open(gmailHref, "_blank", "noopener,noreferrer");
-  };
-
-  const handleCopyDraft = async () => {
-    if (!preparedDraft) return;
-    try {
-      await navigator.clipboard.writeText(preparedDraft.plainCopy);
-      setCopiedDraft(true);
-      window.setTimeout(() => setCopiedDraft(false), 2200);
-    } catch {
-      window.location.href = preparedDraft.mailtoHref;
-    }
   };
 
   return (
@@ -355,41 +325,6 @@ export function ContactSection() {
                     >
                       {validationError}
                     </p>
-                  )}
-
-                  {preparedDraft && (
-                    <div
-                      role="status"
-                      className="rounded-xl border border-[var(--accent-green)] bg-[var(--accent-green-soft)] p-3 text-xs text-[var(--ink-primary)]"
-                    >
-                      <p className="font-bold text-[var(--accent-green)]">
-                        Gmail draft opened! Click Send in Gmail, or choose another option:
-                      </p>
-                      <div className="mt-2 flex flex-wrap items-center gap-2">
-                        <a
-                          href={preparedDraft.gmailHref}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 rounded-lg border border-[var(--border-ink)] bg-[var(--bg-surface)] px-2.5 py-1 font-mono-tech text-[11px] font-bold hover:underline"
-                        >
-                          <span>Open Gmail</span>
-                          <ExternalLink className="h-3 w-3" aria-hidden="true" />
-                        </a>
-                        <a
-                          href={preparedDraft.mailtoHref}
-                          className="inline-flex items-center gap-1 rounded-lg border border-[var(--border-soft)] bg-[var(--bg-surface)] px-2.5 py-1 font-mono-tech text-[11px] font-semibold hover:border-[var(--border-ink)]"
-                        >
-                          <span>Mail App (mailto)</span>
-                        </a>
-                        <button
-                          type="button"
-                          onClick={handleCopyDraft}
-                          className="inline-flex items-center gap-1 rounded-lg border border-[var(--border-soft)] bg-[var(--bg-surface)] px-2.5 py-1 font-mono-tech text-[11px] font-semibold hover:border-[var(--border-ink)]"
-                        >
-                          <span>{copiedDraft ? "Copied Draft" : "Copy Draft"}</span>
-                        </button>
-                      </div>
-                    </div>
                   )}
                 </div>
               </div>

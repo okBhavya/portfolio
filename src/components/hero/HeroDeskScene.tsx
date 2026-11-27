@@ -115,9 +115,9 @@ const DESK_PROPS: DeskPropMeta[] = [
       labelY: 449,
     },
     night: {
-      points: "112,324 274,324 274,548 112,548",
-      labelX: 192,
-      labelY: 318,
+      points: "136,406 286,406 286,552 136,552",
+      labelX: 211,
+      labelY: 407,
     },
   },
   {
@@ -418,7 +418,7 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
         </svg>
 
         <Image
-          src="/hero/desk-day-v6.png"
+          src="/hero/desk-day-v7.png"
           width={DAY_DIMENSIONS.width}
           height={DAY_DIMENSIONS.height}
           priority
@@ -431,7 +431,7 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
           className="hero-img-day block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
         />
         <Image
-          src="/hero/desk-night-v6.png"
+          src="/hero/desk-night-v7.png"
           width={NIGHT_DIMENSIONS.width}
           height={NIGHT_DIMENSIONS.height}
           loading={isNight || preloadOther ? "eager" : "lazy"}
@@ -439,8 +439,26 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
           sizes="(max-width: 820px) 96vw, 780px"
           draggable={false}
           onLoad={() => setPreloadOther(true)}
-          alt="Hand-drawn night-mode illustration of Bhavya Gupta wearing a black t-shirt sleeping at his desk beside his closed silver Lenovo laptop with a GNU sticker, glowing mini Nintendo Tetris console, owl reading on stacked books, starry BITS Pilani Clock Tower window, headphones, globe, and badminton racket"
+          alt="Hand-drawn night-mode illustration of Bhavya Gupta wearing a black t-shirt sleeping at his desk beside his closed silver Lenovo laptop with a GNU sticker, glowing mini Nintendo Tetris console, stacked books, starry BITS Pilani Clock Tower window, headphones, globe, and badminton racket"
           className="hero-img-night block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
+        />
+        {/* Night reading Owl sprite arriving atop the 3 stacked books cleanly at 2s */}
+        <Image
+          src="/hero/owl-reading-v7.png"
+          width={159}
+          height={159}
+          loading={isNight || preloadOther ? "eager" : "lazy"}
+          decoding="sync"
+          sizes="160px"
+          draggable={false}
+          alt="Owl perched atop stack of three books reading its glowing book"
+          style={{
+            left: "10.174%",
+            top: "53.516%",
+            width: "10.174%",
+            height: "18.229%",
+          }}
+          className="hero-owl-perched pointer-events-none select-none [-webkit-tap-highlight-color:transparent]"
         />
 
         {/* Inline SVG hotspot map & gentle foreground breeze/glow overlay locked to natural coordinates */}
@@ -508,9 +526,87 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
             </g>
           </g>
 
-          {/* Subtle breathing golden lamp glow over the owl's open book atop the 3 stacked books */}
+          {/* Subtle breathing golden lamp glow over the owl's open book + 2s wing-flapping flight onto 3 stacked books */}
           <g className="hero-sky-night pointer-events-none">
-            <circle cx="204" cy="442" r="46" fill="url(#heroOwlBookGlow)" className="owl-book-glow" />
+            <circle cx="235" cy="482" r="44" fill="url(#heroOwlBookGlow)" className="owl-book-glow hero-owl-perched-glow" />
+            {isNight && (
+              <g className="hero-owl-flight">
+                {/* Outstretched flapping slate-grey left & right wings */}
+                <g className="owl-wing-left">
+                  <path
+                    d="M-12 -6 C-46 -26 -64 -10 -52 12 C-38 22 -18 14 -10 8 Z"
+                    fill="#5F6575"
+                    stroke="#171214"
+                    strokeWidth="2.8"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M-24 -2 C-42 -8 -48 2 -40 10"
+                    fill="none"
+                    stroke="#171214"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  />
+                </g>
+                <g className="owl-wing-right">
+                  <path
+                    d="M12 -6 C46 -26 64 -10 52 12 C38 22 18 14 10 8 Z"
+                    fill="#5F6575"
+                    stroke="#171214"
+                    strokeWidth="2.8"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M24 -2 C42 -8 48 2 40 10"
+                    fill="none"
+                    stroke="#171214"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  />
+                </g>
+                {/* Tail feathers */}
+                <path
+                  d="M-12 22 L-18 42 L0 36 L14 42 L10 22 Z"
+                  fill="#4E5360"
+                  stroke="#171214"
+                  strokeWidth="2.4"
+                  strokeLinejoin="round"
+                />
+                {/* Owl body */}
+                <ellipse
+                  cx="0"
+                  cy="6"
+                  rx="24"
+                  ry="27"
+                  fill="#7D624C"
+                  stroke="#171214"
+                  strokeWidth="2.8"
+                />
+                {/* Owl head & ear tufts */}
+                <path
+                  d="M-24 -18 Q-28 -36 -38 -40 Q-16 -36 -6 -29 Q0 -31 6 -29 Q18 -36 36 -40 Q26 -32 24 -18 Q24 4 0 4 Q-24 4 -24 -18 Z"
+                  fill="#666973"
+                  stroke="#171214"
+                  strokeWidth="2.6"
+                  strokeLinejoin="round"
+                />
+                {/* Warm cream facial discs */}
+                <ellipse cx="-10" cy="-12" rx="11" ry="11" fill="#EAD0AE" stroke="#171214" strokeWidth="2.2" />
+                <ellipse cx="10" cy="-12" rx="11" ry="11" fill="#EAD0AE" stroke="#171214" strokeWidth="2.2" />
+                {/* Big golden amber eyes + catchlights */}
+                <circle cx="-10" cy="-12" r="5.5" fill="#E39D43" stroke="#171214" strokeWidth="1.8" />
+                <circle cx="10" cy="-12" r="5.5" fill="#E39D43" stroke="#171214" strokeWidth="1.8" />
+                <circle cx="-10" cy="-12" r="3" fill="#2A1710" />
+                <circle cx="10" cy="-12" r="3" fill="#2A1710" />
+                <circle cx="-8.5" cy="-13.5" r="1.4" fill="#FFFDF9" />
+                <circle cx="11.5" cy="-13.5" r="1.4" fill="#FFFDF9" />
+                {/* Beak */}
+                <path d="M-3.5 -9 L3.5 -9 L0 -1 Z" fill="#D88835" stroke="#171214" strokeWidth="1.8" strokeLinejoin="round" />
+                {/* Small closed blue book carried in talons to the 3 stacked books */}
+                <path d="M-14 22 L12 18 L16 32 L-10 36 Z" fill="#7CA0B2" stroke="#171214" strokeWidth="2.2" strokeLinejoin="round" />
+                <path d="M-11 26 L13 22" stroke="#FFF8E6" strokeWidth="2" />
+              </g>
+            )}
           </g>
 
           {DESK_PROPS.map((prop) => {

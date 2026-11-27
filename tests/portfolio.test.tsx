@@ -87,29 +87,45 @@ describe("Bhavya Gupta Portfolio", () => {
     ).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("spins circular project carousel, filters by domain, and opens/closes a detailed case study modal", async () => {
+  it("spins React Bits 3D circular carousel with arrows & keyboard, filters by domain, and opens/closes case study modal", async () => {
     renderApp();
 
     const projectsSection = screen.getByRole("region", {
       name: /experiments & systems i've built/i,
     });
 
-    // Circular wrap: from 01 / 05, Previous wraps to 05 / 05 (CalibrAI)
+    // Circular wrap via Previous project button: 1 of 5 -> 5 of 5 (CalibrAI)
     fireEvent.click(
       within(projectsSection).getByRole("button", { name: "Previous project" })
     );
-    expect(within(projectsSection).getByText("05 / 05")).toBeInTheDocument();
-    fireEvent.click(
-      within(projectsSection).getByRole("button", { name: "Next project" })
-    );
-    expect(within(projectsSection).getByText("01 / 05")).toBeInTheDocument();
+    expect(
+      within(projectsSection).getByText("CalibrAI Extension, 5 of 5")
+    ).toBeInTheDocument();
+    expect(
+      within(projectsSection).getByRole("button", {
+        name: "Focus CalibrAI Extension",
+      })
+    ).toHaveAttribute("aria-pressed", "true");
+
+    // Keyboard ArrowRight wraps forward from 5 of 5 back to 1 of 5 (World Models & MPC)
+    const carouselEl = within(projectsSection).getByRole("region", {
+      name: "Projects circular carousel",
+    });
+    fireEvent.keyDown(carouselEl, { key: "ArrowRight" });
+    expect(
+      within(projectsSection).getByText("World Models & MPC, 1 of 5")
+    ).toBeInTheDocument();
 
     const dataFilter = within(projectsSection).getByRole("button", {
       name: "Data Science",
     });
     fireEvent.click(dataFilter);
 
-    expect(within(projectsSection).getByText("01 / 02")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        within(projectsSection).getByText("Planet Sentinel, 1 of 2")
+      ).toBeInTheDocument();
+    });
     expect(
       within(projectsSection).getByRole("heading", {
         level: 3,
@@ -126,7 +142,9 @@ describe("Bhavya Gupta Portfolio", () => {
     fireEvent.click(
       within(projectsSection).getByRole("button", { name: "Next project" })
     );
-    expect(within(projectsSection).getByText("02 / 02")).toBeInTheDocument();
+    expect(
+      within(projectsSection).getByText("Customer Intelligence, 2 of 2")
+    ).toBeInTheDocument();
     expect(
       within(projectsSection).getByRole("heading", {
         level: 3,
@@ -139,9 +157,13 @@ describe("Bhavya Gupta Portfolio", () => {
     });
     fireEvent.click(openBtn);
 
-    const dialog = await screen.findByRole("dialog", {
-      name: /customer intelligence & banner ranking engine/i,
-    });
+    const dialog = await screen.findByRole(
+      "dialog",
+      {
+        name: /customer intelligence & banner ranking engine/i,
+      },
+      { timeout: 3500 }
+    );
     expect(dialog).toBeInTheDocument();
     expect(within(dialog).getByText("42.4M / 3.02M")).toBeInTheDocument();
     expect(
@@ -296,7 +318,11 @@ describe("Bhavya Gupta Portfolio", () => {
       "_blank",
       "noopener,noreferrer"
     );
-    expect(screen.getByRole("status")).toHaveTextContent(/gmail draft opened/i);
+    expect(screen.queryByText(/gmail draft opened/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/B\.E\. CSE/i)).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: /cup of warm tea illustration/i })
+    ).toBeInTheDocument();
     expect(SITE_URL).toBe("https://www.bhavya.me");
   });
 });

@@ -1,15 +1,9 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  ArrowRight,
-  ArrowUpRight,
-  FolderOpen,
-  GitBranch,
-} from "lucide-react";
+import { ArrowUpRight, FolderOpen, GitBranch } from "lucide-react";
 import {
   projectCategories,
   projects,
@@ -17,8 +11,13 @@ import {
   type ProjectItem,
 } from "@/data/projects";
 import { SectionReveal } from "@/components/SectionReveal";
+import { useDeskTheme } from "@/components/ThemeProvider";
 import { LazyProjectVideo } from "./LazyProjectVideo";
 import { ProjectSketchVisual } from "./ProjectSketchVisual";
+import {
+  CircularCarousel,
+  type CircularCarouselHandle,
+} from "./CircularCarousel";
 
 interface ProjectsSectionProps {
   activeCategory: "All" | ProjectCategory;
@@ -231,6 +230,7 @@ function ProjectCard({
             <div className="mt-4 flex items-center justify-center border-t border-[var(--border-soft)] pt-3">
               <button
                 type="button"
+                tabIndex={-1}
                 onClick={(e) => {
                   e.stopPropagation();
                   onSelectCard?.();
@@ -253,83 +253,86 @@ export function ProjectsSection({
   onCategoryChange,
   onOpenProject,
 }: ProjectsSectionProps) {
-  const [rawIndex, setRawIndex] = useState(0);
-  const swipeStartX = useRef<number | null>(null);
+  const { theme } = useDeskTheme();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const carouselRef = useRef<CircularCarouselHandle>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const visibleProjects = projects.filter(
     (p) => activeCategory === "All" || p.categories.includes(activeCategory)
   );
   const count = visibleProjects.length;
-  const activeIdx = count > 0 ? ((rawIndex % count) + count) % count : 0;
-
-  const stepCarousel = (delta: number) => {
-    if (count <= 1) return;
-    setRawIndex((prev) => (((prev + delta) % count) + count) % count);
-  };
+  const safeIndex = count > 0 ? activeIndex % count : 0;
 
   const handleCategorySwitch = (cat: "All" | ProjectCategory) => {
-    setRawIndex(0);
+    setActiveIndex(0);
     onCategoryChange(cat);
   };
 
-  const prevIdx = count > 1 ? (activeIdx - 1 + count) % count : -1;
-  const nextIdx = count > 1 ? (activeIdx + 1) % count : -1;
-  const activeProject = visibleProjects[activeIdx];
-  const prevProject = prevIdx >= 0 ? visibleProjects[prevIdx] : null;
-  const nextProject =
-    nextIdx >= 0 && nextIdx !== prevIdx ? visibleProjects[nextIdx] : null;
+  // Support global Left/Right arrow keys when the Projects lab is in view (without interfering with Tetris or modals/inputs)
+  useEffect(() => {
+    const onWindowKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      const activeTag = document.activeElement?.tagName;
+      if (
+        activeTag === "INPUT" ||
+        activeTag === "TEXTAREA" ||
+        activeTag === "SELECT"
+      ) {
+        return;
+      }
+      if (document.querySelector('[role="dialog"]')) return;
+      const activeEl = document.activeElement;
+      if (activeEl?.closest("#playground")) return;
+      if (activeEl?.closest('[aria-roledescription="carousel"]')) return;
+
+      const sec = sectionRef.current;
+      if (!sec) return;
+      const rect = sec.getBoundingClientRect();
+      const vh = window.innerHeight || 800;
+      const inFocusBand = rect.top < vh * 0.72 && rect.bottom > vh * 0.28;
+      if (!inFocusBand) return;
+
+      e.preventDefault();
+      carouselRef.current?.stepBy(e.key === "ArrowRight" ? 1 : -1);
+    };
+
+    window.addEventListener("keydown", onWindowKeyDown);
+    return () => window.removeEventListener("keydown", onWindowKeyDown);
+  }, []);
+
+  const carouselItems = visibleProjects.map((project) => ({
+    id: project.id,
+    title: project.shortTitle,
+    subtitle: project.categories.join(" · "),
+    project,
+  }));
 
   return (
     <section
       id="projects"
+      ref={sectionRef}
       aria-labelledby="projects-heading"
       className="border-b-2 border-[var(--border-soft)] py-16 sm:py-24"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionReveal>
           <div className="flex flex-col gap-5">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <div className="max-w-3xl">
-                <p className="font-mono-tech text-xs font-semibold tracking-wider text-[var(--accent-orange)] uppercase">
-                  03 · Personal Engineering Lab
-                </p>
-                <h2
-                  id="projects-heading"
-                  className="text-balance mt-1 font-serif-display text-3xl font-bold tracking-tight text-[var(--ink-primary)] sm:text-4xl"
-                >
-                  Experiments &amp; systems I&apos;ve built
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-[var(--ink-secondary)] sm:text-base">
-                  Spin through the circular project carousel—each folder opens
-                  a full case study verified directly from repository source
-                  code and benchmark logs.
-                </p>
-              </div>
-
-              {count > 1 && (
-                <div className="flex shrink-0 items-center gap-2 self-start sm:self-end">
-                  <button
-                    type="button"
-                    onClick={() => stepCarousel(-1)}
-                    aria-label="Previous project"
-                    className="ink-button inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--bg-surface)] text-[var(--ink-primary)]"
-                  >
-                    <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-                  </button>
-                  <span className="min-w-[4.5rem] rounded-xl border-2 border-[var(--border-ink)] bg-[var(--bg-beige)] px-3 py-2 text-center font-mono-tech text-xs font-bold text-[var(--ink-primary)]">
-                    {String(activeIdx + 1).padStart(2, "0")} /{" "}
-                    {String(count).padStart(2, "0")}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => stepCarousel(1)}
-                    aria-label="Next project"
-                    className="ink-button inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--bg-surface)] text-[var(--ink-primary)]"
-                  >
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </button>
-                </div>
-              )}
+            <div className="max-w-3xl">
+              <p className="font-mono-tech text-xs font-semibold tracking-wider text-[var(--accent-orange)] uppercase">
+                03 · Personal Engineering Lab
+              </p>
+              <h2
+                id="projects-heading"
+                className="text-balance mt-1 font-serif-display text-3xl font-bold tracking-tight text-[var(--ink-primary)] sm:text-4xl"
+              >
+                Experiments &amp; systems I&apos;ve built
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--ink-secondary)] sm:text-base">
+                Drag, click any card, or use the left and right arrow keys to
+                spin through the 3D circular project carousel—each folder opens
+                a verified case study.
+              </p>
             </div>
 
             {/* Domain Filter Strip */}
@@ -366,96 +369,58 @@ export function ProjectsSection({
           </div>
         </SectionReveal>
 
-        {/* Interactive Circular Orbital Carousel Stage */}
-        {activeProject && (
-          <div
-            role="region"
-            aria-roledescription="carousel"
-            aria-label="Projects circular carousel"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "ArrowLeft") {
-                e.preventDefault();
-                stepCarousel(-1);
-              } else if (e.key === "ArrowRight") {
-                e.preventDefault();
-                stepCarousel(1);
-              }
-            }}
-            onPointerDown={(e) => {
-              swipeStartX.current = e.clientX;
-            }}
-            onPointerUp={(e) => {
-              if (swipeStartX.current === null) return;
-              const dx = e.clientX - swipeStartX.current;
-              swipeStartX.current = null;
-              if (Math.abs(dx) > 52) {
-                stepCarousel(dx < 0 ? 1 : -1);
-              }
-            }}
-            className="mt-10 focus:outline-none"
-          >
-            {/* Curved orbital track */}
-            <div className="relative mx-auto flex min-h-[500px] items-center justify-center overflow-hidden py-4">
-              {/* Left orbital wing card (Previous in circular ring) */}
-              {prevProject && (
-                <div
-                  onClick={() => setRawIndex(prevIdx)}
-                  className="hidden cursor-pointer text-left transition-all duration-300 ease-out hover:-translate-y-0.5 lg:block lg:w-[320px] lg:-translate-x-10 lg:translate-y-4 lg:-rotate-3 lg:scale-[0.86]"
-                >
+        {/* React Bits 3D Circular Orbit Carousel Stage */}
+        {count > 0 && (
+          <div className="mt-8">
+            <div className="relative h-[625px] w-full sm:h-[650px]">
+              <CircularCarousel
+                key={activeCategory}
+                carouselRef={carouselRef}
+                items={carouselItems}
+                preset="orbit"
+                intro="rise"
+                cardWidth={365}
+                aspectRatio={0.69}
+                gap={24}
+                curve={0}
+                tilt={-8}
+                perspective={1850}
+                autoplay="off"
+                momentum={0.62}
+                snap
+                draggable
+                focusOnClick
+                parallax={0.28}
+                depthFade={theme === "night" ? 0.48 : 0.32}
+                fadeColor={theme === "night" ? "#111722" : "#F7F3EB"}
+                cornerRadius={24}
+                captions
+                showArrows
+                onChange={setActiveIndex}
+                renderItem={(item, idx, isActive) => (
                   <ProjectCard
-                    project={prevProject}
+                    project={item.project}
                     expIndex={projects.findIndex(
-                      (p) => p.id === prevProject.id
+                      (p) => p.id === item.project.id
                     )}
-                    isActive={false}
+                    isActive={isActive}
                     onOpenProject={onOpenProject}
-                    onSelectCard={() => setRawIndex(prevIdx)}
+                    onSelectCard={() => carouselRef.current?.focusIndex(idx)}
                   />
-                </div>
-              )}
-
-              {/* Center Spotlight Card */}
-              <div className="z-20 w-full max-w-[440px] shrink-0 transition-all duration-300 ease-out">
-                <ProjectCard
-                  project={activeProject}
-                  expIndex={projects.findIndex(
-                    (p) => p.id === activeProject.id
-                  )}
-                  isActive
-                  onOpenProject={onOpenProject}
-                />
-              </div>
-
-              {/* Right orbital wing card (Next in circular ring) */}
-              {nextProject && (
-                <div
-                  onClick={() => setRawIndex(nextIdx)}
-                  className="hidden cursor-pointer text-left transition-all duration-300 ease-out hover:-translate-y-0.5 lg:block lg:w-[320px] lg:translate-x-10 lg:translate-y-4 lg:rotate-3 lg:scale-[0.86]"
-                >
-                  <ProjectCard
-                    project={nextProject}
-                    expIndex={projects.findIndex(
-                      (p) => p.id === nextProject.id
-                    )}
-                    isActive={false}
-                    onOpenProject={onOpenProject}
-                    onSelectCard={() => setRawIndex(nextIdx)}
-                  />
-                </div>
-              )}
+                )}
+              />
             </div>
 
-            {/* Orbital Dot & Label Ring Strip */}
+            {/* Orbital Project Selector Strip */}
             {count > 1 && (
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
                 {visibleProjects.map((proj, idx) => {
-                  const selected = idx === activeIdx;
+                  const selected = idx === safeIndex;
                   return (
                     <button
                       key={proj.id}
                       type="button"
-                      onClick={() => setRawIndex(idx)}
+                      onClick={() => carouselRef.current?.focusIndex(idx)}
                       aria-label={`Focus ${proj.shortTitle}`}
                       aria-pressed={selected}
                       className={`inline-flex items-center gap-1.5 rounded-full border-2 px-3 py-1.5 font-mono-tech text-[11px] font-bold transition-all ${
