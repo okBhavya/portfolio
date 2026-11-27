@@ -50,7 +50,7 @@ src/
 └── data/
     ├── experience.ts          # Verified work, leadership, NSS & SusMafia records
     ├── profile.ts             # Bio, configurable availability status, verified socials/email
-    ├── projects.ts            # 6 flagship GitHub projects + 2 field-note experiments
+    ├── projects.ts            # 5 flagship GitHub projects powering the circular carousel
     └── skills.ts              # Verified technical skills linked to projects & experience
 public/
 ├── hero/                      # Day & Night illustrated desk plates
@@ -74,7 +74,7 @@ cp .env.example .env.local
 
 | Variable | Default | Purpose |
 | :--- | :--- | :--- |
-| `NEXT_PUBLIC_SITE_URL` | `https://bhavya.me` | Canonical URL for Open Graph, `sitemap.xml`, and `robots.txt` |
+| `NEXT_PUBLIC_SITE_URL` | `https://www.bhavya.me` | Canonical URL for Open Graph, `sitemap.xml`, and `robots.txt` |
 | `NEXT_PUBLIC_AVAILABILITY_MODE` | `building` | Controls hero status badge (`building` \| `seeking` \| `custom`) |
 
 ### 3. Run Development Server or Production Server

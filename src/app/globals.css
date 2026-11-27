@@ -16,6 +16,7 @@
   --accent-orange-fill: #b54b0d;
   --accent-orange-soft: #fcefe6;
   --accent-green: #1b5745;
+  --accent-green-fill: #1b5745;
   --accent-green-soft: #d8ece4;
   --accent-mustard: #8c6209;
   --accent-mustard-soft: #f6ead0;
@@ -43,6 +44,7 @@
   --accent-orange-fill: #c05212;
   --accent-orange-soft: rgba(240, 146, 85, 0.18);
   --accent-green: #63c5a1;
+  --accent-green-fill: #1f6b53;
   --accent-green-soft: rgba(99, 197, 161, 0.18);
   --accent-mustard: #ecc05b;
   --accent-mustard-soft: rgba(236, 192, 91, 0.18);
@@ -180,11 +182,13 @@ body {
   }
 }
 
-html[data-theme="night"] .hero-img-day {
+html[data-theme="night"] .hero-img-day,
+html[data-theme="night"] .hero-sky-day {
   display: none;
 }
 
-html:not([data-theme="night"]) .hero-img-night {
+html:not([data-theme="night"]) .hero-img-night,
+html:not([data-theme="night"]) .hero-sky-night {
   display: none;
 }
 
@@ -231,6 +235,228 @@ html:not([data-theme="night"]) .hero-img-night {
 
 .signature-underline {
   animation: drawSignature 550ms ease-out 150ms both;
+}
+
+@keyframes windowCloudSlow {
+  0% {
+    transform: translate3d(-110px, 0, 0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.96;
+  }
+  92% {
+    opacity: 0.96;
+  }
+  100% {
+    transform: translate3d(295px, -3px, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes windowCloudFast {
+  0% {
+    transform: translate3d(-160px, 2px, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.92;
+  }
+  90% {
+    opacity: 0.92;
+  }
+  100% {
+    transform: translate3d(265px, -2px, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes windowBirdGlideA {
+  0% {
+    transform: translate3d(-210px, 12px, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.95;
+  }
+  90% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(345px, -16px, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes windowBirdGlideB {
+  0% {
+    transform: translate3d(175px, 6px, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(-235px, -14px, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes windowBirdFlap {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.45);
+  }
+}
+
+@keyframes windowLeafSwayA {
+  0%,
+  100% {
+    transform: rotate(-3.5deg);
+  }
+  50% {
+    transform: rotate(4.2deg);
+  }
+}
+
+@keyframes windowLeafSwayB {
+  0%,
+  100% {
+    transform: rotate(3.8deg);
+  }
+  50% {
+    transform: rotate(-3.2deg);
+  }
+}
+
+@keyframes windowWindLeafDrift {
+  0% {
+    transform: translate3d(-18px, -4px, 0) rotate(-14deg);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.9;
+  }
+  82% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(135px, 24px, 0) rotate(32deg);
+    opacity: 0;
+  }
+}
+
+@keyframes windowStarTwinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.18);
+  }
+}
+
+@keyframes owlBookGlowPulse {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes cursorRippleExpand {
+  from {
+    opacity: 0.65;
+    transform: translate3d(-50%, -50%, 0) scale(0.35);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(2.4);
+  }
+}
+
+.window-cloud-slow {
+  animation: windowCloudSlow 42s linear -14s infinite;
+  will-change: transform, opacity;
+}
+
+.window-cloud-fast {
+  animation: windowCloudFast 29s linear -9s infinite;
+  will-change: transform, opacity;
+}
+
+.window-bird-glide-a {
+  animation: windowBirdGlideA 19s linear -6s infinite;
+  will-change: transform, opacity;
+}
+
+.window-bird-glide-b {
+  animation: windowBirdGlideB 23s linear -11s infinite;
+  will-change: transform, opacity;
+}
+
+.window-bird-flap {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: windowBirdFlap 0.75s ease-in-out infinite;
+}
+
+.window-leaf-sway-a {
+  transform-box: fill-box;
+  transform-origin: left bottom;
+  animation: windowLeafSwayA 3.6s ease-in-out infinite;
+}
+
+.window-leaf-sway-b {
+  transform-box: fill-box;
+  transform-origin: right bottom;
+  animation: windowLeafSwayB 4.1s ease-in-out -1.4s infinite;
+}
+
+.window-wind-leaf-a {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: windowWindLeafDrift 9.5s ease-in-out -3s infinite;
+}
+
+.window-wind-leaf-b {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: windowWindLeafDrift 11.5s ease-in-out -7s infinite reverse;
+}
+
+.window-star-a {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: windowStarTwinkle 3.2s ease-in-out infinite;
+}
+
+.window-star-b {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: windowStarTwinkle 4.4s ease-in-out -1.8s infinite;
+}
+
+.owl-book-glow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: owlBookGlowPulse 3.4s ease-in-out infinite;
+}
+
+.cursor-ripple {
+  animation: cursorRippleExpand 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {

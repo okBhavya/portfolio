@@ -22,11 +22,9 @@ export const skillCategories: SkillCategory[] = [
     skills: [
       {
         name: "Python",
-        detail: "Production ML pipelines, asyncio systems, fast CLI & backend tooling.",
+        detail: "Production ML pipelines, analytics engines, fast CLI & backend tooling.",
         usedInProjects: [
           "world-models-mpc",
-          "planpilot",
-          "distributed-task-queue",
           "customer-segmentation",
           "continual-learning",
           "flood-mapping",
@@ -35,27 +33,21 @@ export const skillCategories: SkillCategory[] = [
       },
       {
         name: "SQL & DuckDB",
-        detail: "Zero-copy analytical feature layers across 42.4M events & ERP CSV profiling.",
-        usedInProjects: ["customer-segmentation", "planpilot"],
+        detail: "Zero-copy analytical feature layers across 42.4M events & out-of-time validation.",
+        usedInProjects: ["customer-segmentation"],
         usedInExperience: ["sutt"],
       },
       {
         name: "TypeScript",
         detail: "Strict typed browser extensions, React apps, and frontend interfaces.",
-        usedInProjects: ["calibrai", "internship-hunter"],
+        usedInProjects: ["calibrai"],
         usedInExperience: [],
       },
       {
         name: "PostgreSQL & DBMS",
-        detail: "Durable event sourcing, Alembic migrations, relational schemas & indexing.",
-        usedInProjects: ["distributed-task-queue", "planpilot", "calibrai"],
+        detail: "Relational schemas, Alembic migrations, indexing, and consent-bound persistence.",
+        usedInProjects: ["calibrai"],
         usedInExperience: ["kite"],
-      },
-      {
-        name: "Redis (Lua & Streams)",
-        detail: "Atomic ZSET scheduling, lease fencing, XREADGROUP streams, Arq queues.",
-        usedInProjects: ["distributed-task-queue", "planpilot"],
-        usedInExperience: [],
       },
       {
         name: "Probability & Statistics",
@@ -90,12 +82,6 @@ export const skillCategories: SkillCategory[] = [
         usedInExperience: [],
       },
       {
-        name: "Google OR-Tools (CP-SAT)",
-        detail: "Constraint programming for industrial scheduling & feasibility checks.",
-        usedInProjects: ["planpilot"],
-        usedInExperience: [],
-      },
-      {
         name: "Rasterio & SNAP (gpt)",
         detail: "Sentinel-1/2 dual-polarization SAR preprocessing and geospatial tiling.",
         usedInProjects: ["flood-mapping"],
@@ -112,13 +98,13 @@ export const skillCategories: SkillCategory[] = [
       {
         name: "LLM & RAG Pipelines",
         detail: "Retrieval-augmented policy assistants and grounded reasoning workflows.",
-        usedInProjects: ["planpilot", "calibrai"],
+        usedInProjects: ["calibrai"],
         usedInExperience: ["kite"],
       },
       {
         name: "LangChain & Ollama",
         detail: "Prompt orchestration and local open-weight model experimentation.",
-        usedInProjects: ["planpilot"],
+        usedInProjects: [],
         usedInExperience: ["kite"],
       },
       {
@@ -129,8 +115,8 @@ export const skillCategories: SkillCategory[] = [
       },
       {
         name: "Grounded Verification",
-        detail: "5-stage rule compilers and regex citation checks preventing hallucinations.",
-        usedInProjects: ["planpilot", "calibrai"],
+        detail: "Consent-bound capture, SHA-256 hashing & calibration checks for reliable AI outputs.",
+        usedInProjects: ["calibrai"],
         usedInExperience: [],
       },
     ],
@@ -176,37 +162,25 @@ export const skillCategories: SkillCategory[] = [
       {
         name: "FastAPI & Pydantic",
         detail: "Typed REST APIs, rate limiting, HMAC auth tokens, and OpenAPI schemas.",
-        usedInProjects: [
-          "distributed-task-queue",
-          "planpilot",
-          "calibrai",
-          "internship-hunter",
-        ],
+        usedInProjects: ["calibrai"],
         usedInExperience: [],
       },
       {
         name: "React, Next.js & WXT (MV3)",
         detail: "Interactive web apps, Shadow DOM Chrome extensions, and custom UI craft.",
-        usedInProjects: ["calibrai", "internship-hunter"],
+        usedInProjects: ["calibrai"],
         usedInExperience: [],
       },
       {
         name: "Streamlit",
-        detail: "Rapid policy dashboards, live queue telemetry, and ML demo workspaces.",
-        usedInProjects: [
-          "distributed-task-queue",
-          "planpilot",
-          "customer-segmentation",
-          "flood-mapping",
-        ],
+        detail: "Rapid policy dashboards, satellite flood explorers, and ML workspaces.",
+        usedInProjects: ["customer-segmentation", "flood-mapping"],
         usedInExperience: ["kite"],
       },
       {
-        name: "Docker, Pytest & Vitest",
-        detail: "Multi-container Compose stacks, chaos tests, leakage audits & CI checks.",
+        name: "Pytest & Vitest",
+        detail: "Reproducible ablation proofs, leakage audits, extension unit tests & CI checks.",
         usedInProjects: [
-          "distributed-task-queue",
-          "planpilot",
           "customer-segmentation",
           "continual-learning",
           "calibrai",

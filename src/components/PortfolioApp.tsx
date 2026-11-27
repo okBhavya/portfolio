@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { ArrowUp } from "lucide-react";
 import type { ProjectCategory, ProjectItem } from "@/data/projects";
 import { Navbar } from "./Navbar";
+import { CustomCursor } from "./CustomCursor";
 import { HeroSection } from "./hero/HeroSection";
 import { AboutSection } from "./sections/AboutSection";
 import { ExperienceSection } from "./sections/ExperienceSection";
@@ -43,6 +44,7 @@ export function PortfolioApp() {
 
   return (
     <div className="min-h-dvh border-x-0 border-[var(--border-ink)] bg-[var(--bg-paper)] sm:mx-auto sm:border-x-4 xl:max-w-[1480px]">
+      <CustomCursor />
       <Navbar />
       <main id="main-content" tabIndex={-1} className="focus:outline-none">
         <HeroSection onSelectProjectFilter={setProjectFilter} />

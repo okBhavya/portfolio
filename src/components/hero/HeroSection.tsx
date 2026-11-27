@@ -7,7 +7,7 @@ import {
   InstagramIcon,
   LinkedInIcon,
 } from "@/components/SocialIcons";
-import { profileConfig } from "@/data/profile";
+import { buildGmailComposeHref, profileConfig } from "@/data/profile";
 import type { ProjectCategory } from "@/data/projects";
 import { HeroDeskScene } from "./HeroDeskScene";
 
@@ -69,7 +69,9 @@ export function HeroSection({ onSelectProjectFilter }: HeroSectionProps) {
             <GitHubIcon className="h-6 w-6" />
           </a>
           <a
-            href={`mailto:${profileConfig.email}`}
+            href={buildGmailComposeHref()}
+            target="_blank"
+            rel="noopener noreferrer"
             aria-label="Email"
             className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-[var(--ink-secondary)] transition-colors hover:bg-[var(--bg-beige)] hover:text-[var(--ink-primary)]"
           >

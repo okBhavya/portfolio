@@ -69,6 +69,12 @@ Object.defineProperty(window, "matchMedia", {
   }),
 });
 
+Object.defineProperty(window, "open", {
+  writable: true,
+  configurable: true,
+  value: vi.fn(() => null),
+});
+
 // Lightweight Canvas 2D context mock for TetrisGame tests in jsdom
 HTMLCanvasElement.prototype.getContext = (() => {
   return {

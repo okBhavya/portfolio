@@ -1402,7 +1402,11 @@ export function TetrisGame() {
           <button
             type="button"
             onClick={() => setMuted((prev) => !prev)}
-            aria-label={muted ? "Unmute sound effects" : "Mute sound effects"}
+            aria-label={
+              muted
+                ? "Muted — unmute sound effects"
+                : "SFX On — mute sound effects"
+            }
             aria-pressed={muted}
             className="ink-button inline-flex min-h-[44px] touch-manipulation items-center gap-1.5 rounded-xl bg-[var(--bg-surface)] px-3.5 py-1.5 text-xs font-bold text-[var(--ink-primary)]"
           >
@@ -1493,7 +1497,7 @@ export function TetrisGame() {
                   <button
                     type="button"
                     onClick={togglePause}
-                    className="ink-button inline-flex min-h-[44px] touch-manipulation items-center gap-1.5 rounded-xl bg-[var(--accent-green)] px-4 py-2 text-sm font-bold text-[#FFFDF9]"
+                    className="ink-button inline-flex min-h-[44px] touch-manipulation items-center gap-1.5 rounded-xl bg-[var(--accent-green-fill)] px-4 py-2 text-sm font-bold text-[#FFFDF9]"
                   >
                     <Play className="h-4 w-4" aria-hidden="true" />
                     <span>Resume</span>

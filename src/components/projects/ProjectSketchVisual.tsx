@@ -49,52 +49,6 @@ export function ProjectSketchVisual({
         </svg>
       );
 
-    case "planpilot":
-      return (
-        <svg viewBox="0 0 320 130" className="h-full w-full" aria-hidden="true">
-          <rect width="320" height="130" fill="var(--bg-paper)" />
-          {/* Gantt lanes */}
-          <line x1="54" y1="22" x2="54" y2="108" stroke="var(--border-ink)" strokeWidth="1.8" />
-          <line x1="54" y1="108" x2="300" y2="108" stroke="var(--border-ink)" strokeWidth="1.8" />
-          <text x="18" y="42" fontSize="9.5" fontFamily="monospace" fill="var(--ink-secondary)">M1</text>
-          <text x="18" y="68" fontSize="9.5" fontFamily="monospace" fill="var(--ink-secondary)">M2</text>
-          <text x="18" y="94" fontSize="9.5" fontFamily="monospace" fill="var(--ink-secondary)">M3</text>
-          <rect x="64" y="30" width="68" height="16" rx="4" fill="var(--accent-green)" stroke="var(--border-ink)" strokeWidth="1.6" />
-          <rect x="138" y="30" width="18" height="16" rx="3" fill="var(--accent-mustard)" stroke="var(--border-ink)" strokeWidth="1.4" />
-          <rect x="162" y="30" width="84" height="16" rx="4" fill="var(--accent-blue)" stroke="var(--border-ink)" strokeWidth="1.6" />
-          <rect x="84" y="56" width="96" height="16" rx="4" fill="var(--accent-orange)" stroke="var(--border-ink)" strokeWidth="1.6" />
-          <rect x="192" y="56" width="76" height="16" rx="4" fill="var(--accent-green)" stroke="var(--border-ink)" strokeWidth="1.6" />
-          <rect x="70" y="82" width="110" height="16" rx="4" fill="var(--accent-blue)" stroke="var(--border-ink)" strokeWidth="1.6" />
-          <rect x="208" y="82" width="64" height="16" rx="4" fill="var(--accent-mustard)" stroke="var(--border-ink)" strokeWidth="1.6" />
-          <text x="200" y="20" fontSize="9.5" fontFamily="monospace" fill="var(--accent-green)">
-            CP-SAT + [F1] Verified
-          </text>
-        </svg>
-      );
-
-    case "tqe":
-      return (
-        <svg viewBox="0 0 320 130" className="h-full w-full" aria-hidden="true">
-          <rect width="320" height="130" fill="var(--bg-paper)" />
-          {/* Queue -> Lua -> Workers -> Postgres */}
-          <rect x="14" y="42" width="60" height="44" rx="8" fill="var(--bg-surface)" stroke="var(--border-ink)" strokeWidth="2" />
-          <text x="44" y="62" textAnchor="middle" fontSize="9.5" fontWeight="700" fontFamily="monospace" fill="var(--ink-primary)">FastAPI</text>
-          <text x="44" y="75" textAnchor="middle" fontSize="8" fontFamily="monospace" fill="var(--ink-muted)">dual-write</text>
-          <path d="M74 64 H104" stroke="var(--border-ink)" strokeWidth="2" />
-          <rect x="104" y="32" width="82" height="64" rx="10" fill="var(--accent-orange-soft)" stroke="var(--border-ink)" strokeWidth="2" />
-          <text x="145" y="55" textAnchor="middle" fontSize="10" fontWeight="700" fontFamily="monospace" fill="var(--ink-primary)">Redis Lua</text>
-          <text x="145" y="70" textAnchor="middle" fontSize="8" fontFamily="monospace" fill="var(--accent-orange)">10 atomic ops</text>
-          <text x="145" y="83" textAnchor="middle" fontSize="8" fontFamily="monospace" fill="var(--ink-muted)">lease token</text>
-          <path d="M186 48 L220 34 M186 64 H220 M186 80 L220 94" stroke="var(--border-ink)" strokeWidth="2" />
-          <rect x="220" y="20" width="84" height="24" rx="6" fill="var(--accent-green-soft)" stroke="var(--border-ink)" strokeWidth="1.8" />
-          <text x="262" y="35" textAnchor="middle" fontSize="8.5" fontFamily="monospace" fill="var(--ink-primary)">Worker 42MB</text>
-          <rect x="220" y="52" width="84" height="24" rx="6" fill="var(--accent-green-soft)" stroke="var(--border-ink)" strokeWidth="1.8" />
-          <text x="262" y="67" textAnchor="middle" fontSize="8.5" fontFamily="monospace" fill="var(--ink-primary)">Worker 42MB</text>
-          <rect x="220" y="84" width="84" height="24" rx="6" fill="var(--accent-blue-soft)" stroke="var(--border-ink)" strokeWidth="1.8" />
-          <text x="262" y="99" textAnchor="middle" fontSize="8.5" fontFamily="monospace" fill="var(--ink-primary)">Postgres Log</text>
-        </svg>
-      );
-
     case "segmentation":
       return (
         <svg viewBox="0 0 320 130" className="h-full w-full" aria-hidden="true">
@@ -155,6 +109,7 @@ export function ProjectSketchVisual({
       );
 
     case "flood":
+    default:
       return (
         <svg viewBox="0 0 320 130" className="h-full w-full" aria-hidden="true">
           <rect width="320" height="130" fill="var(--bg-paper)" />
@@ -167,21 +122,6 @@ export function ProjectSketchVisual({
           <text x="230" y="102" textAnchor="middle" fontSize="8.5" fontWeight="700" fontFamily="monospace" fill="var(--ink-primary)">
             IoU 0.71 · 3,656 km²
           </text>
-        </svg>
-      );
-
-    case "hunter":
-    default:
-      return (
-        <svg viewBox="0 0 320 130" className="h-full w-full" aria-hidden="true">
-          <rect width="320" height="130" fill="var(--bg-paper)" />
-          <rect x="24" y="24" width="110" height="82" rx="8" fill="var(--bg-surface)" stroke="var(--border-ink)" strokeWidth="2" />
-          <text x="79" y="54" textAnchor="middle" fontSize="9.5" fontWeight="700" fontFamily="monospace" fill="var(--ink-primary)">Filter Gate</text>
-          <text x="79" y="70" textAnchor="middle" fontSize="8" fontFamily="monospace" fill="var(--accent-green)">Remote + SWE/AI</text>
-          <path d="M134 65 H170" stroke="var(--border-ink)" strokeWidth="2" />
-          <rect x="170" y="24" width="126" height="82" rx="8" fill="var(--accent-mustard-soft)" stroke="var(--border-ink)" strokeWidth="2" />
-          <text x="233" y="54" textAnchor="middle" fontSize="9.5" fontWeight="700" fontFamily="monospace" fill="var(--ink-primary)">0–100 Match</text>
-          <text x="233" y="70" textAnchor="middle" fontSize="8" fontFamily="monospace" fill="var(--ink-secondary)">Human Approval</text>
         </svg>
       );
   }

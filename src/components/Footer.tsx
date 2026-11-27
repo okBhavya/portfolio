@@ -3,7 +3,7 @@
 import React from "react";
 import { Mail } from "lucide-react";
 import { GitHubIcon, InstagramIcon, LinkedInIcon } from "./SocialIcons";
-import { profileConfig } from "@/data/profile";
+import { buildGmailComposeHref, profileConfig } from "@/data/profile";
 import { SignatureSvg } from "./SignatureSvg";
 
 export function Footer() {
@@ -22,7 +22,9 @@ export function Footer() {
 
           <div className="flex flex-wrap items-center gap-3">
             <a
-              href={`mailto:${profileConfig.email}`}
+              href={buildGmailComposeHref()}
+              target="_blank"
+              rel="noopener noreferrer"
               aria-label="Email Bhavya Gupta"
               className="ink-button inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--bg-paper)] text-[var(--ink-primary)]"
             >

@@ -1,6 +1,5 @@
 export type ProjectCategory =
   | "AI / ML"
-  | "Systems Engineering"
   | "Data Science"
   | "Product / Tools";
 
@@ -48,13 +47,12 @@ export interface ProjectItem {
   metrics: ProjectMetric[];
   media: ProjectMedia[];
   highlights: string[];
-  sketchType: "mpc" | "planpilot" | "tqe" | "segmentation" | "continual" | "calibrai" | "flood" | "hunter";
+  sketchType: "mpc" | "segmentation" | "continual" | "calibrai" | "flood";
 }
 
 export const projectCategories: ("All" | ProjectCategory)[] = [
   "All",
   "AI / ML",
-  "Systems Engineering",
   "Data Science",
   "Product / Tools",
 ];
@@ -237,83 +235,6 @@ export const projects: ProjectItem[] = [
       "Demonstrates end-to-end geospatial ML pipeline from SAR radar calibration to actionable flood maps.",
     ],
     sketchType: "flood",
-  },
-  {
-    id: "distributed-task-queue",
-    slug: "task-queue-engine",
-    title: "TQE — Distributed Task Queue Engine",
-    shortTitle: "Task Queue Engine",
-    tagline:
-      "High-throughput, fault-tolerant distributed task queue built from scratch with atomic Redis Lua scripts and PostgreSQL event sourcing.",
-    categories: ["Systems Engineering"],
-    featured: true,
-    repoUrl: "https://github.com/okBhavya/Distributed-Task-Queue-Engine",
-    problem:
-      "Off-the-shelf task queues abstract away hard distributed-systems trade-offs: race conditions during lease expiry, duplicate retries, Redis memory loss, and bloated worker processes.",
-    whatIBuilt:
-      "Built an entire distributed task queue engine from first principles—no Celery, RQ, or Dramatiq. Implemented 10 atomic Redis Lua state transitions, cryptographic lease-fencing tokens, dual-write PostgreSQL event sourcing, leader-elected recovery, a FastAPI control plane, and a sub-second Streamlit telemetry UI.",
-    architectureSummary:
-      "Clients submit jobs via FastAPI (dual-writing Postgres + atomic Redis enqueue). Lean asyncio workers (42.94 MB RSS) claim tasks via Lua scripts using IEEE 754 exact float64 priority scores (P*10^14 + T) and lease tokens, while a Redis Streams Persister batches lifecycle events to Postgres and a leader-elected Scheduler reaps expired leases and reconciles cold restarts.",
-    architecturePipeline: [
-      {
-        step: "01",
-        title: "Dual-Write API Gateway",
-        detail: "FastAPI validates idempotency keys, writes Postgres audit truth, and calls atomic enqueue Lua.",
-      },
-      {
-        step: "02",
-        title: "10 Atomic Redis Lua Scripts",
-        detail: "Single-roundtrip ZSET transitions using server TIME and float64 priority+FIFO scoring.",
-      },
-      {
-        step: "03",
-        title: "Lease-Fenced Worker Fleet",
-        detail: "42.94 MB RSS asyncio workers; graceful SIGTERM release preserves retry budgets.",
-      },
-      {
-        step: "04",
-        title: "Persister & Leader Reconciler",
-        detail: "XREADGROUP consumer batches events to Postgres; Reconciler recovers from Redis FLUSHALL.",
-      },
-    ],
-    technologies: [
-      "Python 3.12 (asyncio)",
-      "Redis + Lua Scripts",
-      "PostgreSQL + Alembic",
-      "FastAPI",
-      "Docker Compose",
-      "Streamlit",
-      "Hypothesis & Chaos Tests",
-    ],
-    metrics: [
-      {
-        label: "Sustained Throughput",
-        value: "30,149.5/min",
-        context: "502.5 jobs/sec (3.0x over 10k target)",
-      },
-      {
-        label: "Chaos Failure Rate",
-        value: "0.047%",
-        context: "Under SIGKILL worker chaos testing",
-      },
-      {
-        label: "Telemetry Latency (p99)",
-        value: "14.52 ms",
-        context: "Pipelined Redis stats snapshot",
-      },
-      {
-        label: "Crash Recovery / RSS",
-        value: "2.10 s / 42.9 MB",
-        context: "100% (15/15) poison-job DLQ isolation",
-      },
-    ],
-    media: [],
-    highlights: [
-      "50+ worker containers run comfortably on a single laptop thanks to strict worker import isolation.",
-      "48 passing unit, integration, and chaos tests verifying lease fencing, redelivery, and DLQ isolation.",
-      "Zero burned retries on graceful shutdown by decrementing attempt counts when releasing in-flight jobs.",
-    ],
-    sketchType: "tqe",
   },
   {
     id: "customer-segmentation",
@@ -606,147 +527,5 @@ export const projects: ProjectItem[] = [
       "Includes deterministic evaluation tooling for AUROC, fixed-bin ECE, Brier score, and isotonic calibration.",
     ],
     sketchType: "calibrai",
-  },
-  {
-    id: "planpilot",
-    slug: "planpilot",
-    title: "PlanPilot — AI Production Scheduling Copilot",
-    shortTitle: "PlanPilot",
-    tagline:
-      "LLM copilot layered over Google OR-Tools CP-SAT with 5-stage rule validation, zero-hallucination citations, and DuckDB ERP onboarding.",
-    categories: ["AI / ML", "Product / Tools"],
-    featured: false,
-    repoUrl: "https://github.com/okBhavya/PlanPilot",
-    problem:
-      "Factory schedulers rely on mathematical constraint solvers like CP-SAT, yet converting shop-floor operating rules into solver constraints, cleaning messy SAP CSVs, and explaining why an order slipped normally require deep operations-research expertise—and raw LLMs hallucinate numbers.",
-    whatIBuilt:
-      "Engineered a full-stack AI copilot around OR-Tools CP-SAT. It parses plain-English rules into validated solver constraints, traces lateness root causes deterministically before LLM narration, profiles ERP extracts in DuckDB, and ranks schedule trade-offs via MAUT.",
-    architectureSummary:
-      "A Streamlit workspace and Typer CLI talk to a FastAPI gateway backed by PostgreSQL 16 and Arq/Redis workers. Natural-language rules pass a 5-stage deterministic gate (schema, fuzzy entity match, semantic bounds, DFS cycle check, trial solve), while schedule explanations require regex verification against solver-extracted atomic facts.",
-    architecturePipeline: [
-      {
-        step: "01",
-        title: "NL Rule → 5-Stage Gate",
-        detail: "Pydantic schema, fuzzy entity linking, semantic bounds, DFS cycle check, CP-SAT trial solve.",
-      },
-      {
-        step: "02",
-        title: "DuckDB ERP Onboarding",
-        detail: "Zero-copy SQL profiling of SAP-style CSVs + 3-color DFS BOM cycle detection.",
-      },
-      {
-        step: "03",
-        title: "OR-Tools CP-SAT + Arq",
-        detail: "Async Redis/Arq workers compute optimal schedules persisted to PostgreSQL 16.",
-      },
-      {
-        step: "04",
-        title: "Grounded Citation Verifier",
-        detail: "Backward critical-chain tracer extracts [F1]/[F2] facts; regex guard blocks hallucinations.",
-      },
-    ],
-    technologies: [
-      "Google OR-Tools (CP-SAT)",
-      "FastAPI",
-      "DuckDB",
-      "PostgreSQL 16",
-      "Redis / Arq",
-      "OpenAI & Anthropic",
-      "Streamlit",
-      "Pydantic & Mypy Strict",
-    ],
-    metrics: [
-      {
-        label: "NL Rule Exact Match",
-        value: "90.91%",
-        context: "100.0% schema valid across 65 gold rules",
-      },
-      {
-        label: "Root-Cause Attribution",
-        value: "100% (25/25)",
-        context: "0.11 ms p50 backward critical-chain trace",
-      },
-      {
-        label: "Hallucination Rejection",
-        value: "100.0%",
-        context: "Adversarial altered-number checks blocked",
-      },
-      {
-        label: "ERP Defect Detection F1",
-        value: "100.0%",
-        context: "30 ERP cases; 120.11 ms p50 DuckDB profiling",
-      },
-    ],
-    media: [],
-    highlights: [
-      "170 unit and integration tests passing offline without live LLM calls via SHA-256 cached responses.",
-      "Multi-Attribute Utility Theory (MAUT) comparison lets planners weigh OTD%, makespan, tardiness, and setups interactively.",
-      "Shipped with strict mypy typing, ruff linting, Docker Compose stack, and Typer CLI.",
-    ],
-    sketchType: "planpilot",
-  },
-  {
-    id: "internship-hunter",
-    slug: "internship-hunter",
-    title: "Internship Hunter — Remote Technical Role Matcher",
-    shortTitle: "Internship Hunter",
-    tagline:
-      "Multi-agent discovery, strict qualification gating, and transparent 0–100 profile matching for remote engineering internships.",
-    categories: ["Product / Tools", "Systems Engineering"],
-    featured: false,
-    repoUrl: "https://github.com/okBhavya/Internship_hunter",
-    problem:
-      "Job boards drown students in mislabelled full-time, non-technical, on-site, or expired listings, while automated scripts that bypass logins or fabricate resume claims create unacceptable ethical and security risks.",
-    whatIBuilt:
-      "Built a full-stack FastAPI + SQLAlchemy (13-table schema) and React 19 + TypeScript + Tailwind workspace with modular source adapters (Remotive, Adzuna), deterministic duplicate detection, weighted 0–100 matching, factual verification checks, and strict no-CAPTCHA-bypass human-approval gates.",
-    architectureSummary:
-      "Source adapters normalize raw listings into SQLite via SQLAlchemy, filter strictly for verified remote technical internships, compute weighted skill/role/experience scores, and pause for explicit user approval before any external submission.",
-    architecturePipeline: [
-      {
-        step: "01",
-        title: "Modular Source Adapters",
-        detail: "Ingests Remotive & Adzuna feeds with duplicate detection across listings.",
-      },
-      {
-        step: "02",
-        title: "Strict Qualification Policy",
-        detail: "Rejects non-remote, senior, expired, or non-technical roles deterministically.",
-      },
-      {
-        step: "03",
-        title: "Weighted Match Scorer",
-        detail: "0–100 scoring across technical skills (30%), role (20%), experience (15%), and more.",
-      },
-      {
-        step: "04",
-        title: "Human Approval Queue",
-        detail: "Verification agent checks claims; CAPTCHAs/auth always route to manual action.",
-      },
-    ],
-    technologies: [
-      "FastAPI",
-      "SQLAlchemy",
-      "React 19",
-      "TypeScript",
-      "Vite & Tailwind CSS",
-      "Pytest",
-    ],
-    metrics: [
-      {
-        label: "Data Model",
-        value: "13+ tables",
-        context: "Jobs, matches, skills, audit logs & approval queue",
-      },
-      {
-        label: "Safety Posture",
-        value: "Human-in-Loop",
-        context: "Never bypasses CAPTCHAs, MFA, or login walls",
-      },
-    ],
-    media: [],
-    highlights: [
-      "Pairs agent orchestration with strict factual consistency verification and explicit safety boundaries.",
-    ],
-    sketchType: "hunter",
   },
 ];

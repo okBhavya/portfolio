@@ -42,7 +42,7 @@ const caveat = Caveat({
 });
 
 const sharedDescription =
-  "Personal portfolio and engineering laboratory of Bhavya Gupta (BITS Pilani '27). Applied AI, ML systems, distributed infrastructure, product analytics, and interactive software.";
+  "Personal portfolio and engineering laboratory of Bhavya Gupta (BITS Pilani '27). Applied AI, ML systems, geospatial analytics, product strategy, and interactive software.";
 
 const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('bhavya-desk-theme');if(t==='night'||t==='day'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();`;
 

@@ -89,7 +89,7 @@ export const profileConfig: ProfileConfig = {
       id: "email",
       label: "Email",
       handle: "f20230494@pilani.bits-pilani.ac.in",
-      href: "mailto:f20230494@pilani.bits-pilani.ac.in",
+      href: "https://mail.google.com/mail/?view=cm&fs=1&to=f20230494@pilani.bits-pilani.ac.in",
       description:
         "Best way to reach me for collaborations, ideas, or engineering chats.",
     },
@@ -179,7 +179,7 @@ export const profileConfig: ProfileConfig = {
       checkQuestion:
         "Where does this degrade under distribution shift, process crashes, or adversarial inputs?",
       proofExample:
-        "SIGKILL worker chaos suite in Task Queue Engine (0.047% failure rate) & hallucination-blocking tests in PlanPilot.",
+        "Two-sample DOM stability & strict consent gating in CalibrAI, plus 10-day/7-day temporal leakage audits across 42.4M eCommerce events.",
       accent: "mustard",
     },
     {
@@ -200,4 +200,19 @@ export const profileConfig: ProfileConfig = {
 
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") ||
-  "https://bhavya.me";
+  "https://www.bhavya.me";
+
+export function buildGmailComposeHref(
+  email: string = profileConfig.email,
+  subject = "",
+  body = ""
+): string {
+  const params = new URLSearchParams({
+    view: "cm",
+    fs: "1",
+    to: email,
+  });
+  if (subject.trim()) params.set("su", subject.trim().slice(0, 120));
+  if (body.trim()) params.set("body", body.trim().slice(0, 1200));
+  return `https://mail.google.com/mail/?${params.toString()}`;
+}

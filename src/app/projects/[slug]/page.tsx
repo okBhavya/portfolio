@@ -253,7 +253,7 @@ export default async function ProjectCaseStudyPage({
                     href={project.liveDemoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="ink-button inline-flex items-center gap-1.5 rounded-xl bg-[var(--accent-green)] px-4 py-2 text-xs font-bold text-[#FFFDF9]"
+                    className="ink-button inline-flex items-center gap-1.5 rounded-xl bg-[var(--accent-green-fill)] px-4 py-2 text-xs font-bold text-[#FFFDF9]"
                   >
                     <span>Live Demo</span>
                     <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />

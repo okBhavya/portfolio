@@ -1,5 +1,5 @@
 import React from "react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { PortfolioApp } from "@/components/PortfolioApp";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -32,9 +32,11 @@ describe("Bhavya Gupta Portfolio", () => {
 
     expect(screen.getByText(profileConfig.heroGreeting)).toBeInTheDocument();
     expect(screen.getAllByText(profileConfig.email).length).toBeGreaterThanOrEqual(1);
-    expect(projects.filter((p) => p.featured)).toHaveLength(6);
+    expect(projects.filter((p) => p.featured)).toHaveLength(5);
     expect(projects.find((p) => p.id === "flood-mapping")?.featured).toBe(true);
-    expect(projects.find((p) => p.id === "planpilot")?.featured).toBe(false);
+    expect(projects.find((p) => p.id === "planpilot")).toBeUndefined();
+    expect(projects.find((p) => p.id === "internship-hunter")).toBeUndefined();
+    expect(projects.find((p) => p.id === "distributed-task-queue")).toBeUndefined();
     expect(experiences).toHaveLength(5);
     expect(screen.queryByText("Behavioural cohorts")).not.toBeInTheDocument();
     expect(screen.queryByText(/Areas I gravitate toward/i)).not.toBeInTheDocument();
@@ -85,22 +87,33 @@ describe("Bhavya Gupta Portfolio", () => {
     ).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("filters projects by category and opens/closes a detailed case study modal", async () => {
+  it("spins circular project carousel, filters by domain, and opens/closes a detailed case study modal", async () => {
     renderApp();
 
     const projectsSection = screen.getByRole("region", {
       name: /experiments & systems i've built/i,
     });
 
-    const systemsFilter = within(projectsSection).getByRole("button", {
-      name: "Systems Engineering",
-    });
-    fireEvent.click(systemsFilter);
+    // Circular wrap: from 01 / 05, Previous wraps to 05 / 05 (CalibrAI)
+    fireEvent.click(
+      within(projectsSection).getByRole("button", { name: "Previous project" })
+    );
+    expect(within(projectsSection).getByText("05 / 05")).toBeInTheDocument();
+    fireEvent.click(
+      within(projectsSection).getByRole("button", { name: "Next project" })
+    );
+    expect(within(projectsSection).getByText("01 / 05")).toBeInTheDocument();
 
+    const dataFilter = within(projectsSection).getByRole("button", {
+      name: "Data Science",
+    });
+    fireEvent.click(dataFilter);
+
+    expect(within(projectsSection).getByText("01 / 02")).toBeInTheDocument();
     expect(
       within(projectsSection).getByRole("heading", {
         level: 3,
-        name: "Task Queue Engine",
+        name: "Planet Sentinel",
       })
     ).toBeInTheDocument();
     expect(
@@ -110,25 +123,36 @@ describe("Bhavya Gupta Portfolio", () => {
       })
     ).not.toBeInTheDocument();
 
+    fireEvent.click(
+      within(projectsSection).getByRole("button", { name: "Next project" })
+    );
+    expect(within(projectsSection).getByText("02 / 02")).toBeInTheDocument();
+    expect(
+      within(projectsSection).getByRole("heading", {
+        level: 3,
+        name: "Customer Intelligence",
+      })
+    ).toBeInTheDocument();
+
     const openBtn = within(projectsSection).getByRole("button", {
-      name: /open case study for tqe/i,
+      name: /open case study for customer intelligence/i,
     });
     fireEvent.click(openBtn);
 
     const dialog = await screen.findByRole("dialog", {
-      name: /tqe — distributed task queue engine/i,
+      name: /customer intelligence & banner ranking engine/i,
     });
     expect(dialog).toBeInTheDocument();
-    expect(within(dialog).getByText("30,149.5/min")).toBeInTheDocument();
+    expect(within(dialog).getByText("42.4M / 3.02M")).toBeInTheDocument();
     expect(
       within(dialog).getByRole("link", { name: /^full page$/i })
-    ).toHaveAttribute("href", "/projects/task-queue-engine");
+    ).toHaveAttribute("href", "/projects/customer-intelligence");
 
     fireEvent.keyDown(window, { key: "Escape" });
     await waitFor(() => {
       expect(
         screen.queryByRole("dialog", {
-          name: /tqe — distributed task queue engine/i,
+          name: /customer intelligence & banner ranking engine/i,
         })
       ).not.toBeInTheDocument();
     });
@@ -241,7 +265,7 @@ describe("Bhavya Gupta Portfolio", () => {
     ).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("sanitizes contact inputs and validates empty submissions", () => {
+  it("sanitizes contact inputs, validates empty submissions, and prepares Gmail + mailto compose drafts", () => {
     expect(sanitizeField("  Hello\n\rWorld\t! ", 40)).toBe("Hello World !");
     const mailHref = buildMailtoHref(
       profileConfig.email,
@@ -250,9 +274,29 @@ describe("Bhavya Gupta Portfolio", () => {
     );
     expect(mailHref.startsWith(`mailto:${profileConfig.email}?`)).toBe(true);
 
+    const openSpy = vi.spyOn(window, "open").mockImplementation(() => null);
     renderApp();
+
+    const heroEmailLink = screen.getByRole("link", { name: "Email" });
+    expect(heroEmailLink.getAttribute("href")).toContain("mail.google.com/mail/");
+
+    const emailMeLink = screen.getByRole("link", { name: /email me/i });
+    expect(emailMeLink.getAttribute("href")).toContain("mail.google.com/mail/");
+
     fireEvent.click(screen.getByRole("button", { name: /compose email/i }));
     expect(screen.getByRole("alert")).toHaveTextContent(/at least 4 characters/i);
-    expect(SITE_URL).toBe("https://bhavya.me");
+
+    fireEvent.change(screen.getByLabelText(/message/i), {
+      target: { value: "Hi Bhavya, excited to connect about ML engineering." },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /compose email/i }));
+
+    expect(openSpy).toHaveBeenCalledWith(
+      expect.stringContaining("mail.google.com/mail/"),
+      "_blank",
+      "noopener,noreferrer"
+    );
+    expect(screen.getByRole("status")).toHaveTextContent(/gmail draft opened/i);
+    expect(SITE_URL).toBe("https://www.bhavya.me");
   });
 });
