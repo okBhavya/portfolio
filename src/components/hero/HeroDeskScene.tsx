@@ -199,7 +199,7 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
   const dims = isNight ? NIGHT_DIMENSIONS : DAY_DIMENSIONS;
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setPreloadOther(true), 4500);
+    const timer = window.setTimeout(() => setPreloadOther(true), 1200);
     return () => window.clearTimeout(timer);
   }, []);
 
@@ -426,8 +426,9 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
           decoding="sync"
           sizes="(max-width: 820px) 96vw, 780px"
           draggable={false}
+          onLoad={() => setPreloadOther(true)}
           alt="Hand-drawn illustration of Bhavya Gupta wearing a black t-shirt with textured messy hair and no glasses behind his silver Lenovo laptop with a GNU sticker, alongside a mini Nintendo Tetris console, My Projects corkboard, BITS Pilani Clock Tower window, owl, books, headphones, globe, and badminton racket"
-          className="hero-img-day relative z-10 block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
+          className="hero-img-day block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
         />
         <Image
           src="/hero/desk-night-v6.png"
@@ -437,8 +438,9 @@ export function HeroDeskScene({ onSelectProjectFilter }: HeroDeskSceneProps) {
           decoding="sync"
           sizes="(max-width: 820px) 96vw, 780px"
           draggable={false}
+          onLoad={() => setPreloadOther(true)}
           alt="Hand-drawn night-mode illustration of Bhavya Gupta wearing a black t-shirt sleeping at his desk beside his closed silver Lenovo laptop with a GNU sticker, glowing mini Nintendo Tetris console, owl reading on stacked books, starry BITS Pilani Clock Tower window, headphones, globe, and badminton racket"
-          className="hero-img-night relative z-10 block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
+          className="hero-img-night block h-full w-full select-none [-webkit-tap-highlight-color:transparent]"
         />
 
         {/* Inline SVG hotspot map & gentle foreground breeze/glow overlay locked to natural coordinates */}

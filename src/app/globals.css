@@ -182,14 +182,24 @@ body {
   }
 }
 
-html[data-theme="night"] .hero-img-day,
-html[data-theme="night"] .hero-sky-day {
+html[data-theme="night"] .hero-sky-day,
+html:not([data-theme="night"]) .hero-sky-night {
   display: none;
 }
 
-html:not([data-theme="night"]) .hero-img-night,
-html:not([data-theme="night"]) .hero-sky-night {
-  display: none;
+.hero-img-day,
+.hero-img-night {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  transition: opacity 180ms ease-out;
+}
+
+html[data-theme="night"] .hero-img-day,
+html:not([data-theme="night"]) .hero-img-night {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .hero-stage {
